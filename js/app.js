@@ -3,6 +3,11 @@ var SCORE = 0;
 var LIVES = 3; 
 var STARTED = false; // initial game state?
 var SPACEBG = 'images/space-bg.jpg';
+var CANVAS = document.getElementsByClassName('canvas')
+var CANVAS_WIDTH = CANVAS.width;
+var CANVAS_HEIGHT = CANVAS.height;
+var CANVAS_CENTER_X = CANVAS_WIDTH / 2;
+var CANVAS_CENTER_Y = CANVAS_HEIGHT / 2;
 
 
 // set up basic gameObj as superclass
@@ -43,8 +48,8 @@ Player.prototype.handleInput = function(e){
 
 var player = new Player();
 
-// downKey Listener provided by Udacity
-document.addEventListener('keyup', function(e) {
+// downKey Listener provided by Udacity, replaced keyup with keydown 
+document.addEventListener('keydown', function(e) {
     var allowedKeys = {
         37: 'left',
         38: 'up',
