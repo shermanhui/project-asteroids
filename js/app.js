@@ -11,7 +11,7 @@ var CANVAS_WIDTH = CANVAS.width;
 var CANVAS_HEIGHT = CANVAS.height;
 var CANVAS_CENTER_X = CANVAS_WIDTH / 2;
 var CANVAS_CENTER_Y = CANVAS_HEIGHT / 2;
-var SHIP_SPEED = 5;
+var SHIP_SPEED = 10;
 var SHIP_ANGLE = 100;
 var VECTOR_X = 0;
 var VECTOR_Y = 0;
@@ -45,21 +45,16 @@ Player.prototype.constructor = Player;
 
 // For every downKey, the Player will move accordingly
 Player.prototype.update = function(dt){
-	if (this.downKey === 'left'){
-		this.x -= 10; 
-	}else if(this.downKey === 'right'){
-		this.x += 10;
-	}else if(this.downKey === 'up'){
-		this.y -= 10;
-	}else if(this.downKey === 'down'){
-		this.y += 10;
+	if (37 in keysDown){
+		this.x -= SHIP_SPEED; 
+	}else if(39 in keysDown){
+		this.x += SHIP_SPEED;
+	}else if(38 in keysDown){
+		this.y -= SHIP_SPEED;
+	}else if(40 in keysDown){
+		this.y += SHIP_SPEED;
 	}
-	this.downKey = null;
 };
-Player.prototype.handleInput = function(e){
-	this.downKey = e;
-	this.upKey = e;
-}
 
 // Rock class
 var Rock = function(x, y){
@@ -76,24 +71,20 @@ var rock = new Rock(100, 100);
 
 var player = new Player();
 
-// downKey Listener provided by Udacity, need both keydown and keyup
-document.addEventListener('keydown', function(e) {
-    var allowedKeys = {
-        37: 'left',
-        38: 'up',
-        39: 'right',
-        40: 'down'
-    };
+var keysDown = {};
 
-    player.handleInput(allowedKeys[e.keyCode]);
-});
-document.addEventListener('keyup', function(e) {
-    var allowedKeys = {
-        37: 'left',
-        38: 'up',
-        39: 'right',
-        40: 'down'
-    };
+addEventListener("keydown", function (e) {
+  keysDown[e.keyCode] = true;
+  switch(e.keyCode){
+    case 37: case 39: case 38:  case 40: // arrow keys
+    case 32: e.preventDefault(); break; // space
+    default: break; // do not block other keys
+  }
+  if (e.keyCode == 32) {
+    null; // Space key to shoot
+  }
+}, false);
 
-    player.handleInput(allowedKeys[e.keyCode]);
-});
+addEventListener("keyup", function (e) {
+  delete keysDown[e.keyCode];
+}, false);
