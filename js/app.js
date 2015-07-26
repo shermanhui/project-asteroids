@@ -23,19 +23,23 @@ var Player = function() {
 
 Player.prototype = Object.create(gameObj.prototype);
 Player.prototype.constructor = Player;
+
 // For every downKey, the Player will move accordingly
 Player.prototype.update = function(dt){
 	if (this.downKey === 'left'){
-
+		this.x -= 10; 
 	}else if(this.downKey === 'right'){
-
+		this.x += 10;
 	}else if(this.downKey === 'up'){
-
+		this.y -= 10;
 	}else if(this.downKey === 'down'){
-
+		this.y += 10;
 	}
 	this.downKey = null;
 };
+Player.prototype.handleInput = function(e){
+	this.downKey = e;
+}
 
 var player = new Player();
 
