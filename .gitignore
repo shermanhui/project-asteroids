@@ -1,3 +1,5 @@
 #ignore .DS_Store
 
 *.DS_Store
+images/SpaceShooterRedux
+images/*.zip
