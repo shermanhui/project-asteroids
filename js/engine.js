@@ -136,6 +136,7 @@ var Engine = (function(global) {
         //         ctx.drawImage(Resources.get(rowImages[row]), col * 101, row * 83);
         //     }
         // }
+        ctx.drawImage(Resources.get(SPACEBG), -665, -500)
 
 
         renderEntities();
@@ -169,6 +170,7 @@ var Engine = (function(global) {
      * all of these images are properly loaded our game will start.
      */
     Resources.load([
+        'images/space-bg.jpg'
         // 'images/stone-block.png',
         // 'images/water-block.png',
         // 'images/grass-block.png',
