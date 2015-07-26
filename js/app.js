@@ -5,7 +5,7 @@ var STARTED = false; // initial game state?
 var GAMEOVER = false;
 var SPACEBG = 'images/space-bg.jpg';
 var SHIP = 'images/redship.png';
-var SHIPINFO = new ImageInfo(49.5, 37.5, 99, 75, 10);
+var ROCK = 'images/rock1.png'
 var CANVAS = document.getElementsByClassName('canvas')
 var CANVAS_WIDTH = CANVAS.width;
 var CANVAS_HEIGHT = CANVAS.height;
@@ -23,26 +23,10 @@ var angleToVector = function(angle){
 	return [VECTOR_X, VECTOR_Y];
 };
 
-// Class to create and reference information for every image that's used
-function ImageInfo(xCenter, yCenter, width, height, radius){
-	this.xCenter = xCenter;
-	this.yCenter = yCenter;
-	this.width = width;
-	this.height = height;
-	this.radius = radius;
-};
 
 // set up basic gameObj as superclass
 var gameObj = function(){
 	this.sprite ='';
-	this.x = 0;
-	this.y = 0;
-	this.x_vel = 0;
-	this.y_vel = 0;
-	this.angle = 0;
-	this.radius = 0;
-	this.image_center_x = 0;
-	this.image_center_y = 0;
 };
 
 gameObj.prototype.render = function(){
@@ -76,6 +60,19 @@ Player.prototype.handleInput = function(e){
 	this.downKey = e;
 	this.upKey = e;
 }
+
+// Rock class
+var Rock = function(x, y){
+	gameObj.call(this);
+	this.sprite = ROCK;
+	this.x = x;
+	this.y = y;
+}
+
+Rock.prototype = Object.create(gameObj.prototype);
+Rock.prototype.constructor = Rock;
+
+var rock = new Rock(100, 100);
 
 var player = new Player();
 

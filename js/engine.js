@@ -125,6 +125,7 @@ var Engine = (function(global) {
         // });
 
         player.render();
+        rock.render();
     }
 
     /* This function does nothing but it could have been a good place to
@@ -146,7 +147,8 @@ var Engine = (function(global) {
      */
     Resources.load([
         'images/space-bg.jpg',
-        'images/redship.png'
+        'images/redship.png',
+        'images/rock1.png'
         // 'images/stone-block.png',
         // 'images/water-block.png',
         // 'images/grass-block.png',
