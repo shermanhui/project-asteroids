@@ -8,13 +8,17 @@ HTML5 clone of classic arcade game Asteroids using game engines courtesy of Udac
 - Build general gameObj Object
 	- Build Player Object
 	- Build Asteroids Object
+	- Build Missile Object
 
 ###Player
 - Render spaceship
 - Implement movement controls
 	- Space has no friction...so let's try and simulate that!
 	- Ship should be able to wrap around the screen
-- Implement missile functionality (Need a missile object?)
+
+### Missiles
+- Implement missile functionality
+	- Can have multiple missiles, we should have an array of these objects
 	- Missiles should expire
 	- Missiles should blow up asteroids
 	- Missiles should wrap around the screen
