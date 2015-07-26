@@ -8,6 +8,8 @@ var CANVAS_WIDTH = CANVAS.width;
 var CANVAS_HEIGHT = CANVAS.height;
 var CANVAS_CENTER_X = CANVAS_WIDTH / 2;
 var CANVAS_CENTER_Y = CANVAS_HEIGHT / 2;
+var SHIP_SPEED = 5;
+var SHIP_ANGLE = 100;
 
 
 // set up basic gameObj as superclass
