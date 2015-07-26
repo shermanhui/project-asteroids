@@ -132,7 +132,12 @@ var Engine = (function(global) {
      * those sorts of things. It's only called once by the init() method.
      */
     function reset() {
-        // game state changes SHOULD GO HERE...
+        // game state changes SHOULD GO HERE... 
+        // Something like the below? Bind reset onto a button to activate onclick
+        // SCORE = 0;
+        // LIVES = 3;
+        // STARTED = false;
+        // GAMEOVER = false;
     }
 
     /* Go ahead and load all of the images we know we're going to need to

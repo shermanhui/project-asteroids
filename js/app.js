@@ -4,6 +4,8 @@ var LIVES = 3;
 var STARTED = false; // initial game state?
 var GAMEOVER = false;
 var SPACEBG = 'images/space-bg.jpg';
+var SHIP = 'images/redship.png';
+var SHIPINFO = new ImageInfo(49.5, 37.5, 99, 75, 10);
 var CANVAS = document.getElementsByClassName('canvas')
 var CANVAS_WIDTH = CANVAS.width;
 var CANVAS_HEIGHT = CANVAS.height;
@@ -15,13 +17,20 @@ var VECTOR_X = 0;
 var VECTOR_Y = 0;
 
 // helper functions for velocity
-
 var angleToVector = function(angle){
 	VECTOR_X = Math.cos(angle);
 	VECTOR_Y = Math.sin(angle);
 	return [VECTOR_X, VECTOR_Y];
 };
 
+// Class to create and reference information for every image that's used
+function ImageInfo(xCenter, yCenter, width, height, radius){
+	this.xCenter = xCenter;
+	this.yCenter = yCenter;
+	this.width = width;
+	this.height = height;
+	this.radius = radius;
+};
 
 // set up basic gameObj as superclass
 var gameObj = function(){
@@ -42,7 +51,7 @@ gameObj.prototype.render = function(){
 
 var Player = function() {
 	gameObj.call(this);
-	this.sprite = 'images/redship.png';
+	this.sprite = SHIP;
 	this.x = 200;
 	this.y = 400;
 };
