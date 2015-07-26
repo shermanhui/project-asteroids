@@ -2,6 +2,7 @@
 var SCORE = 0;
 var LIVES = 3; 
 var STARTED = false; // initial game state?
+var GAMEOVER = false;
 var SPACEBG = 'images/space-bg.jpg';
 var CANVAS = document.getElementsByClassName('canvas')
 var CANVAS_WIDTH = CANVAS.width;
@@ -10,11 +11,29 @@ var CANVAS_CENTER_X = CANVAS_WIDTH / 2;
 var CANVAS_CENTER_Y = CANVAS_HEIGHT / 2;
 var SHIP_SPEED = 5;
 var SHIP_ANGLE = 100;
+var VECTOR_X = 0;
+var VECTOR_Y = 0;
+
+// helper functions for velocity
+
+var angleToVector = function(angle){
+	VECTOR_X = Math.cos(angle);
+	VECTOR_Y = Math.sin(angle);
+	return [VECTOR_X, VECTOR_Y];
+};
 
 
 // set up basic gameObj as superclass
 var gameObj = function(){
 	this.sprite ='';
+	this.x = 0;
+	this.y = 0;
+	this.x_vel = 0;
+	this.y_vel = 0;
+	this.angle = 0;
+	this.radius = 0;
+	this.image_center_x = 0;
+	this.image_center_y = 0;
 };
 
 gameObj.prototype.render = function(){
@@ -46,12 +65,23 @@ Player.prototype.update = function(dt){
 };
 Player.prototype.handleInput = function(e){
 	this.downKey = e;
+	this.upKey = e;
 }
 
 var player = new Player();
 
-// downKey Listener provided by Udacity, replaced keyup with keydown 
+// downKey Listener provided by Udacity, need both keydown and keyup
 document.addEventListener('keydown', function(e) {
+    var allowedKeys = {
+        37: 'left',
+        38: 'up',
+        39: 'right',
+        40: 'down'
+    };
+
+    player.handleInput(allowedKeys[e.keyCode]);
+});
+document.addEventListener('keyup', function(e) {
     var allowedKeys = {
         37: 'left',
         38: 'up',
