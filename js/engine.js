@@ -25,8 +25,9 @@ var Engine = (function(global) {
         ctx = canvas.getContext('2d'),
         lastTime;
 
-    canvas.width = 505;
+    canvas.width = 805;
     canvas.height = 606;
+    canvas.style.border = "1px solid";
     doc.body.appendChild(canvas);
 
     /* This function serves as the kickoff point for the game loop itself
