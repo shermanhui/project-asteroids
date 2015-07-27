@@ -4,13 +4,14 @@ var LIVES = 3;
 var STARTED = false; // initial game state?
 var GAMEOVER = false;
 
-var CANVAS = document.getElementsByClassName('canvas')
-
 var FPS = 60;
 var SHIP_SPEED = 10;
 var SHIP_ANGLE = 100;
 var VECTOR_X = 0;
 var VECTOR_Y = 0;
+
+var WIDTH = 800;
+var HEIGHT = 600;
 
 var SPACEBG = 'images/space-oj.jpg';
 var spacebgIMG = new Image();
@@ -45,7 +46,7 @@ function ImageInfo(xCenter, yCenter, width, height, radius, lifespan, animated) 
 };
 
 // set up basic gameObj as superclass
-var gameObj = function(x, y, vx, vy, angle, angleV, image, info){
+var gameObj = function(x, y, vx, vy, angle, angleV, image, info, animated){
 	this.sprite ='';
 	this.x = 200;
 	this.y = 400;
@@ -56,6 +57,7 @@ var gameObj = function(x, y, vx, vy, angle, angleV, image, info){
 	this.imageCenterX = null;
 	this.imageCenterY = null;
 	this.radius = null;
+	this.animated = null;
 };
 
 gameObj.prototype.render = function(){
@@ -81,29 +83,45 @@ Player.prototype.constructor = Player;
 
 // For every downKey, the Player will move accordingly
 Player.prototype.update = function(dt){
-	if (37 in keysDown){
+	if (37 in keysDown){ // left
 		this.x -= SHIP_SPEED; 
-	}else if(39 in keysDown){
+	}else if(39 in keysDown){ // right
 		this.x += SHIP_SPEED;
-	}else if(38 in keysDown){
+	}else if(38 in keysDown){ // up
 		this.y -= SHIP_SPEED;
-	}else if(40 in keysDown){
+	}else if(40 in keysDown){ // down
 		this.y += SHIP_SPEED;
 	}
 };
 
 // Rock class
-var Rock = function(x, y){
+var Rock = function(x, y, vx, vy, angle, angleV, image, info){
 	gameObj.call(this);
 	this.sprite = ROCK;
 	this.x = x;
 	this.y = y;
+	this.imageCenterX = info.xCenter;
+	this.imageCenterY = info.yCenter;
+	this.radius = info.radius;
 }
 
 Rock.prototype = Object.create(gameObj.prototype);
 Rock.prototype.constructor = Rock;
 
-var rock = new Rock(400, 250);
+var rocks = [];
+
+var rock_maker = function(){
+	if (rocks.length < 12){
+		var rockX = Math.random() * WIDTH;
+		var rockY = Math.random() * HEIGHT;
+		var rockXVEL = Math.random() * 100;
+		var rockYVEL = Math.random() * 100;
+		var rockAngleVel = Math.random() * 5;
+		var singleRock = new Rock(rockX, rockY, rockXVEL, rockYVEL, 0, rockAngleVel, rockIMG, rockInfo)
+		rocks.push(singleRock);
+	}
+};
+
 
 var player = new Player(0, 0, 0, 0, shipIMG, shipInfo);
 

@@ -148,6 +148,7 @@ var Engine = (function(global) {
         // Draw every gameobj like asteroids
         renderEntities();
     }
+    setInterval(rock_maker, 1200); // put outside of render because render spawns all rocks at once..
 
     /* This function is called by the render function and is called on each game
      * tick. It's purpose is to then call the render functions you have defined
@@ -157,12 +158,12 @@ var Engine = (function(global) {
         /* Loop through all of the objects within the allEnemies array and call
          * the render function you have defined.
          */
-        // allEnemies.forEach(function(enemy) {
-        //     enemy.render();
-        // });
+        rocks.forEach(function(singleRock) {
+            singleRock.render();
+        });
 
         player.render();
-        rock.render();
+
         
     }
 
