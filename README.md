@@ -1,5 +1,6 @@
 # project-asteroids
 HTML5 clone of classic arcade game Asteroids using game engines courtesy of Udacity
+I did a version previously in Python, thought it would be fun to port it over.
 
 ## TO DO LIST:
 
@@ -24,11 +25,15 @@ HTML5 clone of classic arcade game Asteroids using game engines courtesy of Udac
 	- Missiles should wrap around the screen
 	- Missiles should come from the tip of the ship
 
+#### Collision (probably last to do..)
+- must handle collision between ship and rock, rock and missiles...
+
 ###Asteroids
 - Render One Asteroid
 	- Render multiple asteroids
 - Asteroids should have random momentum/movement
 	- Asteroids should also be able to wrap around the screen
+	- Asteroids should SPIN...this is hard
 
 -Option: Asteroids should be able to split into smaller asteroids
 
