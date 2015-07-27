@@ -23,11 +23,14 @@ var Engine = (function(global) {
         win = global.window,
         canvas = doc.createElement('canvas'),
         ctx = canvas.getContext('2d'),
+        time = 0,
+        time2 = 540,
         lastTime;
 
-    canvas.width = 805;
-    canvas.height = 606;
+    canvas.width = 800;
+    canvas.height = 600;
     canvas.style.border = "1px solid";
+    canvas.setAttribute('id', 'canvas');
     doc.body.appendChild(canvas);
 
     /* This function serves as the kickoff point for the game loop itself
@@ -59,6 +62,24 @@ var Engine = (function(global) {
          */
         win.requestAnimationFrame(main);
     };
+
+    // function drawImageRot(img,x,y,width,height,deg){
+
+    // //Convert degrees to radian 
+    // var rad = deg * Math.PI / 180;
+    // //Set the origin to the center of the image
+    // ctx.translate(x + width / 2, y + height / 2);
+
+    // //Rotate the canvas around the origin
+    // ctx.rotate(rad);
+
+    // //draw the image    
+    // ctx.drawImage(Resources.get(img),width / 2 * (-1),height / 2 * (-1),width,height);
+
+    // //reset the canvas  
+    // ctx.rotate(rad * ( -1 ) );
+    // ctx.translate((x + width / 2) * (-1), (y + height / 2) * (-1));
+    // };
 
     /* This function does some initial setup that should only occur once,
      * particularly setting the lastTime variable that is required for the
@@ -106,8 +127,24 @@ var Engine = (function(global) {
      */
     function render() {
         // Draw background
-        ctx.drawImage(Resources.get(SPACEBG), -665, -500)
+        ctx.drawImage(Resources.get(SPACEBG), 0, 0);
 
+        // time element paces the movement of the background
+        // moving background math ported from my python version of asteroids 
+        // http://www.codeskulptor.org/#user39_tlhzYVXuHl_17.py on line 299
+        time+=0.5; //increase the tick 
+        time2+=0.5; // second timer for second round of debris because the image isn't large enough
+        // wtime and wtime2 are used to simulate a scrolling down effect as time and time2 tick on
+        // we modulo divide with twice the debris width to loop it so we have a changing dy 
+        wtime = time % 900 ; 
+        wtime2 = time2 % 960;
+
+        // drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight)
+        // dWidth and dHeight are to specify the scaled image resolution (can't run without it)
+        ctx.drawImage(Resources.get(DEBRIS), 0, 0, 640, 480, 30, wtime - 380, 640, 480);
+        ctx.drawImage(Resources.get(DEBRIS), 0, 0, 640, 480, 30, wtime2 - 400, 640, 480);
+
+        //drawImageRot(ROCK, 250, 250, 101, 84, 360);
         // Draw every gameobj like asteroids
         renderEntities();
     }
@@ -126,6 +163,7 @@ var Engine = (function(global) {
 
         player.render();
         rock.render();
+        
     }
 
     /* This function does nothing but it could have been a good place to
@@ -147,8 +185,10 @@ var Engine = (function(global) {
      */
     Resources.load([
         'images/space-bg.jpg',
+        'images/space-oj.jpg',
         'images/redship.png',
-        'images/rock1.png'
+        'images/rock1.png',
+        'images/debris.png'
         // 'images/stone-block.png',
         // 'images/water-block.png',
         // 'images/grass-block.png',

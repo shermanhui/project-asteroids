@@ -3,18 +3,28 @@ var SCORE = 0;
 var LIVES = 3; 
 var STARTED = false; // initial game state?
 var GAMEOVER = false;
-var SPACEBG = 'images/space-bg.jpg';
-var SHIP = 'images/redship.png';
-var ROCK = 'images/rock1.png'
+
 var CANVAS = document.getElementsByClassName('canvas')
-var CANVAS_WIDTH = CANVAS.width;
-var CANVAS_HEIGHT = CANVAS.height;
-var CANVAS_CENTER_X = CANVAS_WIDTH / 2;
-var CANVAS_CENTER_Y = CANVAS_HEIGHT / 2;
+
+var FPS = 60;
 var SHIP_SPEED = 10;
 var SHIP_ANGLE = 100;
 var VECTOR_X = 0;
 var VECTOR_Y = 0;
+
+var SPACEBG = 'images/space-oj.jpg';
+var spacebgIMG = new Image();
+var spaceInfo = new ImageInfo(400, 300, 800, 600);
+
+var SHIP = 'images/redship.png';
+var shipIMG = new Image();
+var shipInfo = new ImageInfo(49.5, 37.5, 99, 75, 62, false);
+
+var ROCK = 'images/rock1.png';
+var rockIMG = new Image();
+var rockInfo = new ImageInfo(50.5, 42, 101, 84, 66, -1);
+
+var DEBRIS = 'images/debris.png';
 
 // helper functions for velocity
 var angleToVector = function(angle){
@@ -24,20 +34,46 @@ var angleToVector = function(angle){
 };
 
 
+function ImageInfo(xCenter, yCenter, width, height, radius, lifespan, animated) {
+  this.xCenter = xCenter;
+  this.yCenter = yCenter;
+  this.width = width;
+  this.height = height;
+  this.radius = radius;
+  this.lifespan = lifespan;
+  this.animated = animated;
+};
+
 // set up basic gameObj as superclass
-var gameObj = function(){
+var gameObj = function(x, y, vx, vy, angle, angleV, image, info){
 	this.sprite ='';
+	this.x = 200;
+	this.y = 400;
+	this.vx = vx;
+	this.vy = vy;
+	this.angle = angle;
+	this.angleV = angleV;
+	this.imageCenterX = null;
+	this.imageCenterY = null;
+	this.radius = null;
 };
 
 gameObj.prototype.render = function(){
 	ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
-var Player = function() {
+var Player = function(vx, vy, angle, angleV, image, info) {
 	gameObj.call(this);
 	this.sprite = SHIP;
 	this.x = 200;
 	this.y = 400;
+	this.imageCenterX = info.xCenter;
+	this.imageCenterY = info.yCenter;
+	this.radius = info.radius;
+	// this.draw = function() {
+	// 	ctx.save();
+	// }
+	console.log(this.imageCenterX);
 };
 
 Player.prototype = Object.create(gameObj.prototype);
@@ -67,9 +103,9 @@ var Rock = function(x, y){
 Rock.prototype = Object.create(gameObj.prototype);
 Rock.prototype.constructor = Rock;
 
-var rock = new Rock(100, 100);
+var rock = new Rock(400, 250);
 
-var player = new Player();
+var player = new Player(0, 0, 0, 0, shipIMG, shipInfo);
 
 var keysDown = {};
 
