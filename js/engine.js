@@ -80,7 +80,9 @@ var Engine = (function(global) {
     // ctx.rotate(rad * ( -1 ) );
     // ctx.translate((x + width / 2) * (-1), (y + height / 2) * (-1));
     // };
-
+    function draw(){
+        rock.draw();
+    }
     /* This function does some initial setup that should only occur once,
      * particularly setting the lastTime variable that is required for the
      * game loop.
@@ -117,6 +119,9 @@ var Engine = (function(global) {
         //     enemy.update(dt);
         // });
         player.update();
+        // rocks.forEach(function(singleRock){
+        //     singleRock.update(dt);
+        // });
     }
 
     /* This function initially draws the "game level", it will then call
@@ -161,8 +166,11 @@ var Engine = (function(global) {
         rocks.forEach(function(singleRock) {
             singleRock.render();
         });
-
+        // rocks.forEach(function(singleRock) {
+        //     singleRock.draw();
+        // });
         player.render();
+
 
         
     }
