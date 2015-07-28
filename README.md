@@ -70,6 +70,10 @@ The original source code can be found at [frontend-nanodegree-arcade-game](githu
 
 Art and sound work provided by Kenney.nl for his [SpaceShooterRedux](http://opengameart.org/content/space-shooter-redux) artpack
 
+[Foundation HTML5 Animation with JavaScript](https://books.google.ca/books?id=RmphScK8u-gC&printsec=frontcover#v=onepage&q&f=false) was referenced for several animation solutions
+
+Thanks to rwrountree for being a second pair of eyes and good advice! :)
+
 ## Contribute
 Please feel free to contribute and build off of this. Also, let me know of any issues!
 
