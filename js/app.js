@@ -25,7 +25,7 @@ var rockInfo = new ImageInfo(50.5, 42, 101, 84, 66);
 var DEBRIS = 'images/debris.png';
 
 // use this to multiply an object to radians
-var TORADIANS = Math.PI/180;
+var TO_RADIANS = Math.PI / 180;
 
 // helper functions for velocity
 var angleToVector = function(angle){
@@ -41,17 +41,14 @@ function ImageInfo(centerX, centerY, width, height, radius) {
   this.width = width;
   this.height = height;
   this.radius = radius;
-};
-
-window.ImageInfo = ImageInfo();
+}
 
 // set up basic gameObj as superclass
 var gameObj = function(x, y, vx, vy, angle, angleV, image, info){
 	this.sprite ='';
 	this.x = 200;
 	this.y = 400;
-	this.vx = vx;
-	this.vy = vy;
+	this.velocity = [vx, vy];
 	this.angle = angle;
 	this.angleV = angleV;
 	this.imageCenterX = null;
@@ -63,15 +60,8 @@ var gameObj = function(x, y, vx, vy, angle, angleV, image, info){
 gameObj.prototype.render = function(){
 	ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
-gameObj.prototype.drawRotatedImage = function(img, x, y, angle){
-	ctx.save();
-	ctx.translate(this.x, this.y);
-	ctx.rotate(angle * TORADIANS);
-	ctx.drawImage(this.img, -(this.img.width/2), -(this.img.height/2));
-	ctx.restore();
-}
 
-var Player = function(vx, vy, angle, angleV, image, info) {
+var Player = function(vx, vy, angle, angleV, image, info){
 	gameObj.call(this);
 	this.sprite = SHIP;
 	this.x = 200;
@@ -79,9 +69,6 @@ var Player = function(vx, vy, angle, angleV, image, info) {
 	this.imageCenterX = info.centerX;
 	this.imageCenterY = info.centerY;
 	this.radius = info.radius;
-	// this.draw = function() {
-	// 	ctx.save();
-	// }
 	console.log(this.imageCenterX);
 };
 
@@ -104,44 +91,58 @@ Player.prototype.update = function(dt){
 
 // Rock class
 var Rock = function(x, y, vx, vy, angle, angleV, image, info){
-	gameObj.call(this);
-	this.sprite = ROCK;
-	this.x = x;
-	this.y = y;
-	this.imageCenterX = info.centerX;
-	this.imageCenterY = info.centerY;
-	this.radius = info.radius;
+    gameObj.call(this);
+    this.sprite = ROCK;
+    this.x = x;
+    this.y = y;
+    this.angle = angle;
+    this.angleV = angleV;
+    this.velocity = [vx, vy];
+    this.imageCenterX = info.centerX;
+    this.imageCenterY = info.centerY;
+    this.radius = info.radius;
 };
 
 Rock.prototype = Object.create(gameObj.prototype);
 Rock.prototype.constructor = Rock;
-Rock.prototype.draw = function(x, y, vx, vy, angle, angleV, image, info) {
-	ctx.save();
-	ctx.translate(this.x, this.y);
-	ctx.rotate(this.angle);
-	ctx.drawImage(Resources.get(ROCK), 0 ,0, rockInfo.width, rockInfo.height, -rockInfo.centerX, -rockInfo.centerY, rockInfo.width, rockInfo.height);
-	ctx.restore();
+Rock.prototype.render = function (x, y, vx, vy, angle, angleV, image, info) {
+    ctx.save();
+    ctx.translate(this.x, this.y);
+    ctx.rotate(this.angle * TO_RADIANS);
+    ctx.drawImage(Resources.get(ROCK), 0, 0, rockInfo.width, rockInfo.height, -rockInfo.centerX, -rockInfo.centerY, rockInfo.width, rockInfo.height);
+    ctx.restore();
 };
+Rock.prototype.update = function(dt){
+    this.angle += this.angleV;
+    this.x += this.velocity[0];
+    this.y += this.velocity[1];
+};
+
 
 // Helper Function to make rocks
 // array of rocks to be rendered
 var rocks = [];
 
+// Returns a random integer between min (included) and max (excluded)
+// Using Math.round() will give you a non-uniform distribution!
+function getRandomIntInclusive(min, max){
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
 // make individual rocks to be pushed to rocks array
 var rock_maker = function(){
-	if (rocks.length < 12){
-		var x = Math.random() * WIDTH;
-		var y = Math.random() * HEIGHT;
-		var vx = Math.random() * 100; // ensure velocities and angles are always random :)
-		var vy = Math.random() * 100;
-		var angle = 0;
-		var angleV = (Math.random() * 5)/(Math.random() < 0.5) * 4;
-		var image = ROCK;
-		var info = rockInfo;
-		// new Rock = (x, y, vx, vy, angle, angleVel, image, info);
-		var singleRock = new Rock(x, y, vx, vy, angle, angleV, image, info)
-		rocks.push(singleRock);
-	}
+    if (rocks.length < 12) {
+        var x = getRandomIntInclusive(0, WIDTH);
+        var y = getRandomIntInclusive(0, HEIGHT);
+        var vx = getRandomIntInclusive(-6, 6);
+        var vy = getRandomIntInclusive(-6, 6);
+        var angle = getRandomIntInclusive(0, 360);
+        var angleV = getRandomIntInclusive(-6, 6);
+        var image = ROCK;
+        var info = rockInfo;
+        // new Rock = (x, y, vx, vy, angle, angleVel, image, info);
+        var singleRock = new Rock(x, y, vx, vy, angle, angleV, image, info);
+        rocks.push(singleRock);
+    }
 };
 
 

@@ -61,28 +61,8 @@ var Engine = (function(global) {
          * function again as soon as the browser is able to draw another frame.
          */
         win.requestAnimationFrame(main);
-    };
-
-    // function drawImageRot(img,x,y,width,height,deg){
-
-    // //Convert degrees to radian 
-    // var rad = deg * Math.PI / 180;
-    // //Set the origin to the center of the image
-    // ctx.translate(x + width / 2, y + height / 2);
-
-    // //Rotate the canvas around the origin
-    // ctx.rotate(rad);
-
-    // //draw the image    
-    // ctx.drawImage(Resources.get(img),width / 2 * (-1),height / 2 * (-1),width,height);
-
-    // //reset the canvas  
-    // ctx.rotate(rad * ( -1 ) );
-    // ctx.translate((x + width / 2) * (-1), (y + height / 2) * (-1));
-    // };
-    function draw(){
-        rock.draw();
     }
+
     /* This function does some initial setup that should only occur once,
      * particularly setting the lastTime variable that is required for the
      * game loop.
@@ -119,9 +99,9 @@ var Engine = (function(global) {
         //     enemy.update(dt);
         // });
         player.update();
-        // rocks.forEach(function(singleRock){
-        //     singleRock.update(dt);
-        // });
+        rocks.forEach(function(rock){
+            rock.update(dt);
+        });
     }
 
     /* This function initially draws the "game level", it will then call
@@ -152,6 +132,7 @@ var Engine = (function(global) {
         //drawImageRot(ROCK, 250, 250, 101, 84, 360);
         // Draw every gameobj like asteroids
         renderEntities();
+
     }
     setInterval(rock_maker, 1200); // put outside of render because render spawns all rocks at once..
 
@@ -163,12 +144,9 @@ var Engine = (function(global) {
         /* Loop through all of the objects within the allEnemies array and call
          * the render function you have defined.
          */
-        rocks.forEach(function(singleRock) {
-            singleRock.render();
+        rocks.forEach(function(rock) {
+            rock.render();
         });
-        // rocks.forEach(function(singleRock) {
-        //     singleRock.draw();
-        // });
         player.render();
 
 
