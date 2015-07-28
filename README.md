@@ -12,7 +12,7 @@ I did a version previously in Python, thought it would be fun to port it over.
 	- ~~Build Missile Object~~
 
 ###Player
-~~ - Render spaceship ~~
+- ~~Render spaceship~~
 - Implement movement controls
 	- Ship should move..like a ship..not like a rook
 	- Space has no friction...so let's try and simulate that!
@@ -27,11 +27,11 @@ I did a version previously in Python, thought it would be fun to port it over.
 	- Missiles should come from the tip of the ship
 
 ###Asteroids
-~~ - Render One Asteroid ~~
-~~	- Render multiple asteroids ~~
-~~ - Asteroids should have random momentum/movement ~~
-	- Asteroids should also be able to wrap around the screen
-	~~ - Asteroids should SPIN...this is hard ~~
+ - ~~Render One Asteroid~~
+ - ~~Render multiple asteroids~~
+ - ~~Asteroids should have random momentum/movement~~
+ 	- Asteroids should also be able to wrap around the screen
+ 	- ~~Asteroids should SPIN...this is hard~~
 -Option: Asteroids should be able to split into smaller asteroids
 
 #### Collision (probably last to do..)
