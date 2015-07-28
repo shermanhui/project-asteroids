@@ -88,10 +88,7 @@ Player.prototype.update = function(dt){
 		this.x += SHIP_SPEED;
 	}else if(38 in keysDown){ // up
 		this.y -= SHIP_SPEED;
-	}else if(40 in keysDown){ // down
-		this.y += SHIP_SPEED;
 	}
-
 };
 
 // Rock class
