@@ -127,7 +127,7 @@ Rock.prototype.update = function(dt){
     	this.x = RIGHT;
     }
     if (this.y >= BOTTOM){
-    	this.y = TOP ;
+    	this.y = TOP;
     } else if (this.y <= TOP){
     	this.y = BOTTOM;
     }
