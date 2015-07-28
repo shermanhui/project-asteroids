@@ -113,9 +113,16 @@ Rock.prototype.render = function (x, y, vx, vy, angle, angleV, image, info) {
     ctx.restore();
 };
 Rock.prototype.update = function(dt){
+    if (this.y > 600 || this.y < 0){
+    	this.y = -this.y;
+    } else {
+    	this.x += this.velocity[0] % HEIGHT;
+    } if (this.x > 800 || this.x < 0){
+    	this.x = -this.x;
+    } else {
+    	this.x += this.velocity[1] % WIDTH;
+    }
     this.angle += this.angleV;
-    this.x += this.velocity[0];
-    this.y += this.velocity[1];
 };
 
 
