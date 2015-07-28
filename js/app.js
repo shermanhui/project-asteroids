@@ -10,8 +10,13 @@ var SHIP_ANGLE = 100;
 var VECTOR_X = 0;
 var VECTOR_Y = 0;
 
+// canvas variables
 var WIDTH = 800;
 var HEIGHT = 600;
+var TOP = 0;
+var LEFT = 0;
+var BOTTOM = 1000;
+var RIGHT = 800;
 
 var SPACEBG = 'images/space-oj.jpg';
 var spaceInfo = new ImageInfo(400, 300, 800, 600);
@@ -113,16 +118,19 @@ Rock.prototype.render = function (x, y, vx, vy, angle, angleV, image, info) {
     ctx.restore();
 };
 Rock.prototype.update = function(dt){
-    if (this.y > 0 || this.y < 0){
-    	this.y = -this.y;
-    } else {
-    	this.x += this.velocity[0] % HEIGHT;
-    } if (this.x > 0 || this.x < 0){
-    	this.x = -this.x;
-    } else {
-    	this.x += this.velocity[1] % WIDTH;
-    }
+    this.x += this.velocity[0];
+    this.y += this.velocity[1];
     this.angle += this.angleV;
+    if (this.x >= RIGHT){
+    	this.x = LEFT;
+    } else if (this.x <= LEFT){
+    	this.x = RIGHT;
+    }
+    if (this.y >= BOTTOM){
+    	this.y = TOP ;
+    } else if (this.y <= TOP){
+    	this.y = BOTTOM;
+    }
 };
 
 
