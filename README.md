@@ -4,12 +4,12 @@ I did a version previously in Python, thought it would be fun to port it over.
 
 ## TO DO LIST:
 
-~~ - Initialize README.md ~~
-~~ - Render background image ~~
-~~ - Build general gameObj Object ~~
-	- ~~ Build Player Object ~~
-	- ~~Build Asteroids Object ~~
-	- ~~ Build Missile Object ~~
+ - ~~Initialize README.md~~
+ - ~~Render background image~~
+ - ~~Build general gameObj Object~~
+	- ~~Build Player Object~~
+	- ~~Build Asteroids Object~~
+	- ~~Build Missile Object~~
 
 ###Player
 ~~ - Render spaceship ~~
