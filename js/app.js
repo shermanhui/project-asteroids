@@ -115,7 +115,7 @@ var Rock = function(x, y, vx, vy, angle, angleV, image, info){
 
 Rock.prototype = Object.create(gameObj.prototype);
 Rock.prototype.constructor = Rock;
-Rock.prototype.draw = function(rockX, rockY, rockXVEL, rockYVEL, angle, rockAngleVel, ROCK, rockInfo) {
+Rock.prototype.draw = function(x, y, vx, vy, angle, angleV, image, info) {
 	ctx.save();
 	ctx.translate(this.x, this.y);
 	ctx.rotate(this.angle);
@@ -130,13 +130,16 @@ var rocks = [];
 // make individual rocks to be pushed to rocks array
 var rock_maker = function(){
 	if (rocks.length < 12){
-		var rockX = Math.random() * WIDTH;
-		var rockY = Math.random() * HEIGHT;
-		var rockXVEL = Math.random() * 100; // ensure velocities and angles are always random :)
-		var rockYVEL = Math.random() * 100;
-		var rockAngleVel = (Math.random() * 5)/(Math.random() < 0.5) * 4;
+		var x = Math.random() * WIDTH;
+		var y = Math.random() * HEIGHT;
+		var vx = Math.random() * 100; // ensure velocities and angles are always random :)
+		var vy = Math.random() * 100;
+		var angle = 0;
+		var angleV = (Math.random() * 5)/(Math.random() < 0.5) * 4;
+		var image = ROCK;
+		var info = rockInfo;
 		// new Rock = (x, y, vx, vy, angle, angleVel, image, info);
-		var singleRock = new Rock(rockX, rockY, rockXVEL, rockYVEL, 0, rockAngleVel, ROCK, rockInfo)
+		var singleRock = new Rock(x, y, vx, vy, angle, angleV, image, info)
 		rocks.push(singleRock);
 	}
 };
