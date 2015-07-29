@@ -15,7 +15,7 @@ var WIDTH = 800;
 var HEIGHT = 600;
 var TOP = 0;
 var LEFT = 0;
-var BOTTOM = 1000;
+var BOTTOM = 600;
 var RIGHT = 800;
 
 var SPACEBG = 'images/space-oj.jpg';
@@ -89,6 +89,9 @@ Player.prototype.update = function(dt){
 	}else if(38 in keysDown){ // up
 		this.y -= SHIP_SPEED;
 	}
+	// work on ship movement next
+	// this.x += this.velocity[0];
+	// this.y += this.velocity[1];
 };
 
 // Rock class
@@ -142,7 +145,7 @@ function getRandomIntInclusive(min, max){
 }
 // make individual rocks to be pushed to rocks array
 var rock_maker = function(){
-    if (rocks.length < 12) {
+    if (rocks.length < 3) {
         var x = getRandomIntInclusive(0, WIDTH);
         var y = getRandomIntInclusive(0, HEIGHT);
         var vx = getRandomIntInclusive(-6, 6);
