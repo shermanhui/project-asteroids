@@ -34,9 +34,7 @@ var TO_RADIANS = Math.PI / 180;
 
 // helper functions for velocity
 var angleToVector = function(angle){
-	VECTOR_X = Math.cos(angle);
-	VECTOR_Y = Math.sin(angle);
-	return [VECTOR_X, VECTOR_Y];
+	return [Math.cos(angle), Math.sin(angle)];
 };
 
 
@@ -62,36 +60,83 @@ var gameObj = function(x, y, vx, vy, angle, angleV, image, info){
 	this.animated = null;
 };
 
-gameObj.prototype.render = function(){
-	ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-};
+// gameObj.prototype.render = function(){
+// 	ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+// };
 
 var Player = function(vx, vy, angle, angleV, image, info){
 	gameObj.call(this);
 	this.sprite = SHIP;
-	this.x = 200;
-	this.y = 400;
+	this.x = 400;
+	this.y = 300;
+	this.velocity = [vx, vy];
+	this.thrust = false;
+	this.angle = angle;
+	this.angleV = angleV;
 	this.imageCenterX = info.centerX;
 	this.imageCenterY = info.centerY;
 	this.radius = info.radius;
-	console.log(this.imageCenterX);
 };
 
 Player.prototype = Object.create(gameObj.prototype);
 Player.prototype.constructor = Player;
-
+Player.prototype.render = function(vx, vy, angle, angleV, image, info){
+	ctx.save();
+	ctx.translate(this.x, this.y);
+	ctx.rotate(this.angle * TO_RADIANS);
+	ctx.drawImage(Resources.get(SHIP), 0, 0, shipInfo.width, shipInfo.height, -shipInfo.centerX, -shipInfo.centerY, shipInfo.width, shipInfo.height);
+	ctx.restore();
+};
 // For every downKey, the Player will move accordingly
 Player.prototype.update = function(dt){
-	if (37 in keysDown){ // left
-		this.x -= SHIP_SPEED; 
-	}else if(39 in keysDown){ // right
-		this.x += SHIP_SPEED;
-	}else if(38 in keysDown){ // up
-		this.y -= SHIP_SPEED;
+	// control ship movement based on acceleration and not velocity
+	// angle and angleV control the orientation of the ship and how fast it rotates respectively
+	// key handlers should control angleV and update method should update self.angle += self.angleV
+
+	// basic physics = position = x,y, velocity = vx, vy, accel = angleToVector
+	// position update is position += velocity, velocity update is velocity += acceleration
+
+	// ship class has pos, vel, angle, thrust
+	// position update is self.pos[0] += self.vel[0], self.pos[1] += self.vel[1]
+
+	// update thrust
+	if (38 in keysDown) { // pushing down the up key turns on the thrust
+		this.thrust = true;
+	} else {
+		this.thrust = false;
 	}
-	// work on ship movement next
-	// this.x += this.velocity[0];
-	// this.y += this.velocity[1];
+	// update angular velocity to turn ship
+	if (37 in keysDown) { // left rotation
+		this.angleV = -5;
+	} else if (39 in keysDown) { // right rotation
+		this.angleV = 5;
+	} else {
+		this.angleV = 0;
+	}
+	// update ang
+	this.angle += this.angleV;
+	// update position
+	if (this.y <= 0) {
+		this.y = HEIGHT; // reset to top of screen after you hit bottom
+	} else {
+		this.y = (this.y + this.velocity[1]) % HEIGHT; // ship update y wrap around screen
+	}
+	if (this.x <= 0) {
+		this.x = WIDTH; // reset to right side when you hit left side
+	} else {
+		this.x = (this.x + this.velocity[0]) % WIDTH; // ship update x wrap around screen
+	}
+	// update velocity
+	// velocity update is acceleration in direction of forward vector which is given by angleToVector
+	// we update the forward vector on thrust.
+	if (this.thrust) {
+		var accel = angleToVector(this.angle);
+		this.velocity[0] += accel[0] / 10;
+		this.velocity[1] += accel[1] / 10;
+	}
+	// friction
+	this.velocity[0] *= 0.99;
+	this.velocity[1] *= 0.99;
 };
 
 // Rock class
@@ -107,7 +152,6 @@ var Rock = function(x, y, vx, vy, angle, angleV, image, info){
     this.imageCenterY = info.centerY;
     this.radius = info.radius;
 };
-
 Rock.prototype = Object.create(gameObj.prototype);
 Rock.prototype.constructor = Rock;
 Rock.prototype.render = function (x, y, vx, vy, angle, angleV, image, info) {
@@ -154,7 +198,7 @@ var rock_maker = function(){
         var angleV = getRandomIntInclusive(-6, 6);
         var image = ROCK;
         var info = rockInfo;
-        // new Rock = (x, y, vx, vy, angle, angleVel, image, info);
+        // new Rock = (x, y, vx, vy, angle, angleV, image, info);
         var singleRock = new Rock(x, y, vx, vy, angle, angleV, image, info);
         rocks.push(singleRock);
     }
