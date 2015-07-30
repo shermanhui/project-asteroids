@@ -27,11 +27,13 @@ var Engine = (function(global) {
         time2 = 540,
         lastTime;
 
+    document.body.style.backgroundColor = "black";
     canvas.width = 800;
     canvas.height = 600;
     canvas.style.border = "1px solid";
     canvas.setAttribute('id', 'canvas');
     doc.body.appendChild(canvas);
+
 
     /* This function serves as the kickoff point for the game loop itself
      * and handles properly calling the update and render methods.
@@ -132,7 +134,6 @@ var Engine = (function(global) {
         //drawImageRot(ROCK, 250, 250, 101, 84, 360);
         // Draw every gameobj like asteroids
         renderEntities();
-
     }
     setInterval(rock_maker, 1200); // put outside of render because render spawns all rocks at once..
 
