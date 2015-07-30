@@ -22,7 +22,7 @@ var SPACEBG = 'images/space-oj.jpg';
 var spaceInfo = new ImageInfo(400, 300, 800, 600);
 
 var SHIP = 'images/redship.png';
-var shipInfo = new ImageInfo(49.5, 37.5, 99, 75, 62, false);
+var shipInfo = new ImageInfo(37.5, 49.5, 75, 99, 15, false);
 
 var ROCK = 'images/rock1.png';
 var rockInfo = new ImageInfo(50.5, 42, 101, 84, 66);
@@ -109,7 +109,7 @@ Player.prototype.update = function(dt){
 	if (37 in keysDown) { // left rotation
 		this.angleV = -5;
 	} else if (39 in keysDown) { // right rotation
-		this.angleV = 5;
+		this.angleV = +5;
 	} else {
 		this.angleV = 0;
 	}
@@ -124,17 +124,19 @@ Player.prototype.update = function(dt){
 	if (this.x <= 0) {
 		this.x = WIDTH; // reset to right side when you hit left side
 	} else {
-		this.x = (this.x + this.velocity[0]) % WIDTH; // ship update x wrap around screen
+		this.x = (this.x + this.velocity[0]) % WIDTH;  // ship update x wrap around screen
 	}
 	// update velocity
 	// velocity update is acceleration in direction of forward vector which is given by angleToVector
 	// we update the forward vector on thrust.
 	if (this.thrust) {
-		var accel = angleToVector(this.angle);
+		var angle = this.angle * TO_RADIANS;
+		var accel = angleToVector(angle);
 		this.velocity[0] += accel[0] / 10;
 		this.velocity[1] += accel[1] / 10;
 	}
-	// friction
+
+	// friction needed to help control ship!
 	this.velocity[0] *= 0.99;
 	this.velocity[1] *= 0.99;
 };
