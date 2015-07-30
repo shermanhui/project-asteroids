@@ -30,7 +30,7 @@ I did a version previously in Python, thought it would be fun to port it over.
  - ~~Render One Asteroid~~
  - ~~Render multiple asteroids~~
  - ~~Asteroids should have random momentum/movement~~
- 	- Asteroids should also be able to wrap around the screen
+ 	- ~~Asteroids should also be able to wrap around the screen~~
  	- ~~Asteroids should SPIN...this is hard~~
 -Option: Asteroids should be able to split into smaller asteroids
 
