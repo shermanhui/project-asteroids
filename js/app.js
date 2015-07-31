@@ -24,10 +24,7 @@ var spaceInfo = new ImageInfo(400, 300, 800, 600);
 var SHIP = 'images/redship.png';
 var shipInfo = new ImageInfo(37.5, 49.5, 75, 99, 15);
 
-var LASER = 'images/bullet.png';
-var laserInfo = new ImageInfo(21.5, 21.5, 43, 43, 30);
-
-var SLASER = 'images/slaser.png';
+var SLASER = 'images/shot.png';
 var slaserInfo = new ImageInfo(5, 5, 10, 10, 3)
 
 var ROCK = 'images/rock1.png';
@@ -203,10 +200,10 @@ Rock.prototype.update = function(dt){
 
 var Laser = function(x, y, vx, vy, angle, angleV, image, info){
 	gameObj.call(this);
-	this.x = x;
-	this.y = y;
-	this.angle = angle;
-	this.angleV = angleV;
+	this.x = player.x;
+	this.y = player.y;
+	this.angle = player.angle;
+	this.angleV = player.angleV;
 	this.velocity = [vx, vy];
 	this.imageCenterX = slaserInfo.centerX;
 	this.imageCenterY = slaserInfo.centerY;
