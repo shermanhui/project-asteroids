@@ -104,6 +104,9 @@ var Engine = (function(global) {
         rocks.forEach(function(rock){
             rock.update(dt);
         });
+        lasers.forEach(function(laser) {
+            player.update(dt);
+        });
     }
 
     /* This function initially draws the "game level", it will then call
@@ -148,9 +151,10 @@ var Engine = (function(global) {
         rocks.forEach(function(rock) {
             rock.render();
         });
+        lasers.forEach(function(laser) {
+            laser.render();
+        });
         player.render();
-
-
         
     }
 
@@ -176,12 +180,10 @@ var Engine = (function(global) {
         'images/space-oj.jpg',
         'images/redship.png',
         'images/rock1.png',
-        'images/debris.png'
-        // 'images/stone-block.png',
-        // 'images/water-block.png',
-        // 'images/grass-block.png',
-        // 'images/enemy-bug.png',
-        // 'images/char-boy.png'
+        'images/debris.png',
+        'images/shot.png',
+        'images/slaser.png',
+        'images/bullet.png'
     ]);
     Resources.onReady(init);
 

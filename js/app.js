@@ -22,21 +22,32 @@ var SPACEBG = 'images/space-oj.jpg';
 var spaceInfo = new ImageInfo(400, 300, 800, 600);
 
 var SHIP = 'images/redship.png';
-var shipInfo = new ImageInfo(37.5, 49.5, 75, 99, 15, false);
+var shipInfo = new ImageInfo(37.5, 49.5, 75, 99, 15);
+
+var LASER = 'images/bullet.png';
+var laserInfo = new ImageInfo(21.5, 21.5, 43, 43, 30);
+
+var SLASER = 'images/slaser.png';
+var slaserInfo = new ImageInfo(5, 5, 10, 10, 3)
 
 var ROCK = 'images/rock1.png';
-var rockInfo = new ImageInfo(50.5, 42, 101, 84, 66);
+var rockInfo = new ImageInfo(50.5, 42, 101, 84, 20); //6
 
 var DEBRIS = 'images/debris.png';
 
 // use this to multiply an object to radians
 var TO_RADIANS = Math.PI / 180;
 
+// Math functions 
 // helper functions for velocity
 var angleToVector = function(angle){
 	return [Math.cos(angle), Math.sin(angle)];
 };
 
+// disance between to objects
+var distToObj = function (px, py, qx, qy) {
+	return Math.sqrt(Math.pow(px - qx, 2) + Math.pow(py - qy, 2));
+};
 
 function ImageInfo(centerX, centerY, width, height, radius) {
   this.centerX = centerX;
@@ -60,9 +71,9 @@ var gameObj = function(x, y, vx, vy, angle, angleV, image, info){
 	this.animated = null;
 };
 
-// gameObj.prototype.render = function(){
-// 	ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-// };
+gameObj.prototype.render = function(){
+	ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+};
 
 var Player = function(vx, vy, angle, angleV, image, info){
 	gameObj.call(this);
@@ -140,6 +151,17 @@ Player.prototype.update = function(dt){
 	this.velocity[0] *= 0.99;
 	this.velocity[1] *= 0.99;
 };
+Player.prototype.shoot = function(){
+	var angle = this.angle * TO_RADIANS;
+	var forwardDir = angleToVector(angle);
+	var laserX = this.x + this.radius * forwardDir[0];
+	var laserY = this.y + this.radius * forwardDir[1];
+	var laserXVel = this.velocity[0] + 400 * forwardDir[0];
+	var laserYVel = this.velocity[1] + 400 * forwardDir[1];
+	var laser = new Laser(laserX, laserY, laserXVel, laserYVel, angle, 0, SLASER, slaserInfo);
+	lasers.push(laser);
+	console.log(lasers);
+};
 
 // Rock class
 var Rock = function(x, y, vx, vy, angle, angleV, image, info){
@@ -179,10 +201,33 @@ Rock.prototype.update = function(dt){
     }
 };
 
+var Laser = function(x, y, vx, vy, angle, angleV, image, info){
+	gameObj.call(this);
+	this.x = x;
+	this.y = y;
+	this.angle = angle;
+	this.angleV = angleV;
+	this.velocity = [vx, vy];
+	this.imageCenterX = slaserInfo.centerX;
+	this.imageCenterY = slaserInfo.centerY;
+	this.radius = info.radius;
+};
+Laser.prototype = Object.create(gameObj.prototype);
+Laser.prototype.constructor = Laser;
+Laser.prototype.render = function(x, y, vx, vy, angle, angleV, image, info){
+	ctx.save();
+	ctx.translate(this.x, this.y);
+	ctx.rotate(this.angle * TO_RADIANS);
+	ctx.drawImage(Resources.get(SLASER), 0,0, slaserInfo.width, slaserInfo.height, -this.imageCenterX, -this.imageCenterY, slaserInfo.width, slaserInfo.height);
+	ctx.restore;
+}
+
 
 // Helper Function to make rocks
 // array of rocks to be rendered
 var rocks = [];
+// array of lasers to be rendered
+var lasers = [];
 
 // Returns a random integer between min (included) and max (excluded)
 // Using Math.round() will give you a non-uniform distribution!
@@ -196,12 +241,12 @@ var rock_maker = function(){
         var y = getRandomIntInclusive(0, HEIGHT);
         var vx = getRandomIntInclusive(-6, 6);
         var vy = getRandomIntInclusive(-6, 6);
-        var angle = getRandomIntInclusive(0, 360);
+        var angle = getRandomIntInclusive(0, 90);
         var angleV = getRandomIntInclusive(-6, 6);
         var image = ROCK;
         var info = rockInfo;
         // new Rock = (x, y, vx, vy, angle, angleV, image, info);
-        var singleRock = new Rock(x, y, vx, vy, angle, angleV, image, info);
+        var singleRock = new Rock(x, y, vx, vy, angle, angleV, ROCK, rockInfo);
         rocks.push(singleRock);
     }
 };
@@ -223,7 +268,7 @@ addEventListener("keydown", function (e) {
     default: break; // do not block other keys
   }
   if (e.keyCode == 32) {
-    null; // Space key to shoot nothing here yet
+    player.shoot(); // Space key to shoot nothing here yet
   }
 }, false);
 
