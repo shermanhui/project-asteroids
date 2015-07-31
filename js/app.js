@@ -54,11 +54,31 @@ function ImageInfo(centerX, centerY, width, height, radius) {
   this.radius = radius;
 }
 
-// set up basic gameObj as superclass
+var shipObj = function(x, y, vx, vy, angle, angleV, image, info){
+	this.sprite ='';
+	this.x = x;
+	this.y = y;
+	this.velocity = [vx, vy];
+	this.angle = angle;
+	this.angleV = angleV;
+	this.imageCenterX = null;
+	this.imageCenterY = null;
+	this.radius = null;
+	this.thrust = false;
+};
+
+shipObj.prototype.render = function(){
+	ctx.save();
+	ctx.translate(this.x, this.y);
+	ctx.rotate(this.angle * TO_RADIANS);
+	ctx.drawImage(Resources.get(SHIP), 0, 0, shipInfo.width, shipInfo.height, -shipInfo.centerX, -shipInfo.centerY, shipInfo.width, shipInfo.height);
+	ctx.restore();
+};
+
 var gameObj = function(x, y, vx, vy, angle, angleV, image, info){
 	this.sprite ='';
-	this.x = 200;
-	this.y = 400;
+	this.x = x;
+	this.y = y;
 	this.velocity = [vx, vy];
 	this.angle = angle;
 	this.angleV = angleV;
@@ -69,11 +89,15 @@ var gameObj = function(x, y, vx, vy, angle, angleV, image, info){
 };
 
 gameObj.prototype.render = function(){
-	ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+	ctx.save();
+	ctx.translate(this.x, this.y);
+	ctx.rotate(this.angle * TO_RADIANS);
+	ctx.drawImage(Resources.get(SHIP), 0, 0, shipInfo.width, shipInfo.height, -shipInfo.centerX, -shipInfo.centerY, shipInfo.width, shipInfo.height);
+	ctx.restore();
 };
 
 var Player = function(vx, vy, angle, angleV, image, info){
-	gameObj.call(this);
+	shipObj.call(this);
 	this.sprite = SHIP;
 	this.x = 400;
 	this.y = 300;
@@ -86,15 +110,15 @@ var Player = function(vx, vy, angle, angleV, image, info){
 	this.radius = info.radius;
 };
 
-Player.prototype = Object.create(gameObj.prototype);
+Player.prototype = Object.create(shipObj.prototype);
 Player.prototype.constructor = Player;
-Player.prototype.render = function(vx, vy, angle, angleV, image, info){
-	ctx.save();
-	ctx.translate(this.x, this.y);
-	ctx.rotate(this.angle * TO_RADIANS);
-	ctx.drawImage(Resources.get(SHIP), 0, 0, shipInfo.width, shipInfo.height, -shipInfo.centerX, -shipInfo.centerY, shipInfo.width, shipInfo.height);
-	ctx.restore();
-};
+//Player.prototype.render = function(vx, vy, angle, angleV, image, info){
+// 	ctx.save();
+// 	ctx.translate(this.x, this.y);
+// 	ctx.rotate(this.angle * TO_RADIANS);
+// 	ctx.drawImage(Resources.get(SHIP), 0, 0, shipInfo.width, shipInfo.height, -shipInfo.centerX, -shipInfo.centerY, shipInfo.width, shipInfo.height);
+// 	ctx.restore();
+// };
 // For every downKey, the Player will move accordingly
 Player.prototype.update = function(dt){
 	// control ship movement based on acceleration and not velocity
@@ -149,13 +173,13 @@ Player.prototype.update = function(dt){
 	this.velocity[1] *= 0.99;
 };
 Player.prototype.shoot = function(){
-	var angle = this.angle * TO_RADIANS;
-	var forwardDir = angleToVector(angle);
+	var vangle = this.angle * TO_RADIANS;
+	var forwardDir = angleToVector(vangle);
 	var laserX = this.x + this.radius * forwardDir[0];
 	var laserY = this.y + this.radius * forwardDir[1];
 	var laserXVel = this.velocity[0] + 400 * forwardDir[0];
 	var laserYVel = this.velocity[1] + 400 * forwardDir[1];
-	var laser = new Laser(laserX, laserY, laserXVel, laserYVel, angle, 0, SLASER, slaserInfo);
+	var laser = new Laser(laserX, laserY, laserXVel, laserYVel, this.angle, 0, SLASER, slaserInfo);
 	lasers.push(laser);
 	console.log(lasers);
 };
@@ -200,10 +224,10 @@ Rock.prototype.update = function(dt){
 
 var Laser = function(x, y, vx, vy, angle, angleV, image, info){
 	gameObj.call(this);
-	this.x = player.x;
-	this.y = player.y;
-	this.angle = player.angle;
-	this.angleV = player.angleV;
+	this.x = x;
+	this.y = y;
+	this.angle = angle;
+	this.angleV = angleV;
 	this.velocity = [vx, vy];
 	this.imageCenterX = slaserInfo.centerX;
 	this.imageCenterY = slaserInfo.centerY;
@@ -215,7 +239,7 @@ Laser.prototype.render = function(x, y, vx, vy, angle, angleV, image, info){
 	ctx.save();
 	ctx.translate(this.x, this.y);
 	ctx.rotate(this.angle * TO_RADIANS);
-	ctx.drawImage(Resources.get(SLASER), 0,0, slaserInfo.width, slaserInfo.height, -this.imageCenterX, -this.imageCenterY, slaserInfo.width, slaserInfo.height);
+	ctx.drawImage(Resources.get(SLASER), 0, 0, slaserInfo.width, slaserInfo.height, -this.imageCenterX, -this.imageCenterY, slaserInfo.width, slaserInfo.height);
 	ctx.restore;
 }
 
@@ -232,7 +256,7 @@ function getRandomIntInclusive(min, max){
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 // make individual rocks to be pushed to rocks array
-var rock_maker = function(){
+var rockMaker = function(){
     if (rocks.length < 3) {
         var x = getRandomIntInclusive(0, WIDTH);
         var y = getRandomIntInclusive(0, HEIGHT);
@@ -247,6 +271,10 @@ var rock_maker = function(){
         rocks.push(singleRock);
     }
 };
+// handles object collision
+var groupCollide = function(){
+	null; // researching collision math
+}
 
 
 // make new Player at default x, y position that's in Player

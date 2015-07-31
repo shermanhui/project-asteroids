@@ -138,7 +138,7 @@ var Engine = (function(global) {
         // Draw every gameobj like asteroids
         renderEntities();
     }
-    setInterval(rock_maker, 1200); // put outside of render because render spawns all rocks at once..
+    setInterval(rockMaker, 1200); // put outside of render because render spawns all rocks at once..
 
     /* This function is called by the render function and is called on each game
      * tick. It's purpose is to then call the render functions you have defined
