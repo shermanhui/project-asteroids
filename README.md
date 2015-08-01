@@ -13,10 +13,11 @@ I did a version previously in Python, thought it would be fun to port it over.
 
 ###Player
 - ~~Render spaceship~~
-- Implement movement controls
-	- Ship should move..like a ship..not like a rook
-	- Space has no friction...so let's try and simulate that!
-	- Ship should be able to wrap around the screen
+- ~~Implement movement controls~~
+	- ~~Ship should move..like a ship..not like a rook~~
+	- ~~Space has no friction...so let's try and simulate that!~~
+	- ~~We actually need friction to help improve gameplay!~~ 
+	- ~~Ship should be able to wrap around the screen~~
 
 ### Missiles
 - Implement missile functionality
