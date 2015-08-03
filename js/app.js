@@ -25,7 +25,7 @@ var SHIP = 'images/redship.png';
 var shipInfo = new ImageInfo(37.5, 49.5, 75, 99, 15);
 
 var SLASER = 'images/shot.png';
-var slaserInfo = new ImageInfo(5, 5, 10, 10, 3)
+var slaserInfo = new ImageInfo(5, 5, 10, 10, 3, 60)
 
 var ROCK = 'images/rock1.png';
 var rockInfo = new ImageInfo(50.5, 42, 101, 84, 20); //6
@@ -82,10 +82,11 @@ var gameObj = function(x, y, vx, vy, angle, angleV, image, info){
 	this.velocity = [vx, vy];
 	this.angle = angle;
 	this.angleV = angleV;
-	this.imageCenterX = null;
-	this.imageCenterY = null;
-	this.radius = null;
-	this.animated = null;
+	// this.imageCenterX = info.xCenter;
+	// this.imageCenterY = info.yCenter;
+	// this.radius = info.radius;
+	// this.lifespan = info.lifespan;
+	// this.age = 0;
 };
 
 gameObj.prototype.render = function(){
@@ -95,6 +96,10 @@ gameObj.prototype.render = function(){
 	ctx.drawImage(Resources.get(SHIP), 0, 0, shipInfo.width, shipInfo.height, -shipInfo.centerX, -shipInfo.centerY, shipInfo.width, shipInfo.height);
 	ctx.restore();
 };
+
+gameObj.prototype.collide = function(otherObj){
+	var distance = distToObj(this.x, this.y, otherObj.x, otherObj.y)
+}
 
 var Player = function(vx, vy, angle, angleV, image, info){
 	shipObj.call(this);
@@ -177,8 +182,8 @@ Player.prototype.shoot = function(){
 	var forwardDir = angleToVector(vangle);
 	var laserX = this.x + this.radius * forwardDir[0];
 	var laserY = this.y + this.radius * forwardDir[1];
-	var laserXVel = this.velocity[0] + 400 * forwardDir[0];
-	var laserYVel = this.velocity[1] + 400 * forwardDir[1];
+	var laserXVel = this.velocity[0] + 5 * forwardDir[0];
+	var laserYVel = this.velocity[1] + 5 * forwardDir[1];
 	var laser = new Laser(laserX, laserY, laserXVel, laserYVel, this.angle, 0, SLASER, slaserInfo);
 	lasers.push(laser);
 	console.log(lasers);
@@ -240,7 +245,22 @@ Laser.prototype.render = function(x, y, vx, vy, angle, angleV, image, info){
 	ctx.translate(this.x, this.y);
 	ctx.rotate(this.angle * TO_RADIANS);
 	ctx.drawImage(Resources.get(SLASER), 0, 0, slaserInfo.width, slaserInfo.height, -this.imageCenterX, -this.imageCenterY, slaserInfo.width, slaserInfo.height);
-	ctx.restore;
+	ctx.restore();
+};
+Laser.prototype.update = function(){
+	this.x += this.velocity[0];
+    this.y += this.velocity[1];
+    this.angle += this.angleV;
+    if (this.y <= 0) {
+		this.y = HEIGHT; // reset to top of screen 
+	} else {
+		this.y = (this.y + this.velocity[1]) % HEIGHT; // y wrap around screen
+	}
+	if (this.x <= 0) {
+		this.x = WIDTH; // reset to opposite side
+	} else {
+		this.x = (this.x + this.velocity[0]) % WIDTH;  // x wrap around screen
+	}
 }
 
 
@@ -272,9 +292,14 @@ var rockMaker = function(){
     }
 };
 // handles object collision
-var groupCollide = function(){
-	null; // researching collision math
-}
+// var groupCollide = function(group, object){
+// 	var collisions = 0;
+// 	var collidedItems = [];
+
+// 	for (var i = 0; i < group.length; i++){
+// 		if (group[i].collide(object))
+// 	} 
+// }
 
 
 // make new Player at default x, y position that's in Player
@@ -283,18 +308,23 @@ var player = new Player(0, 0, 0, 0, SHIP, shipInfo);
 // keysDown is an object that holds an array of keyCodes to be referenced to move the ship
 // It makes it much easier to account for two keyDown actions like left+up
 var keysDown = {};
+var checkTime = 0;
 
 addEventListener("keydown", function (e) {
-  keysDown[e.keyCode] = true;
-  console.log(keysDown);
-  switch(e.keyCode){
-    case 37: case 39: case 38:  case 40: // arrow keys
-    case 32: e.preventDefault(); break; // space
-    default: break; // do not block other keys
-  }
-  if (e.keyCode == 32) {
-    player.shoot(); // Space key to shoot nothing here yet
-  }
+	keysDown[e.keyCode] = true;
+	var currentTime = new Date();
+	console.log(keysDown);
+	switch(e.keyCode){
+		case 37: case 39: case 38:  case 40: // arrow keys
+		case 32: e.preventDefault(); break; // space
+		default: break; // do not block other keys
+	}
+	if (e.keyCode == 32) {
+		if ((currentTime.getTime() - checkTime) > 200){ //add time delay to prevent spamming
+			player.shoot();
+			checkTime = currentTime.getTime();
+		}
+	}
 }, false);
 
 addEventListener("keyup", function (e) {

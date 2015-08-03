@@ -105,7 +105,7 @@ var Engine = (function(global) {
             rock.update(dt);
         });
         lasers.forEach(function(laser) {
-            player.update(dt);
+            laser.update(dt);
         });
     }
 
