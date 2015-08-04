@@ -111,8 +111,8 @@ var Engine = (function(global) {
             LIVES -= onCollide(rocks, player);
             groupsCollide(lasers, rocks);
         }
-        updateSpriteGroup(lasers);
-        updateSpriteGroup(rocks);
+        updateGroup(lasers);
+        updateGroup(rocks);
     }
     /* This function initially draws the "game level", it will then call
      * the renderEntities function. Remember, this function is called every

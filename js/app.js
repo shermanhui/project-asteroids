@@ -166,7 +166,7 @@ Player.prototype.shoot = function(){
 };
 Player.prototype.collide = function(otherObj){
 	var distance = distToObj(this.x, this.y, otherObj.x, otherObj.y);
-	if (distToObj < (this.radius + otherObj.radius)){
+	if (distance < (this.radius + otherObj.radius)){
 		return true;
 	} else {
 		return false;
@@ -212,7 +212,7 @@ Rock.prototype.update = function(dt){
 };
 Rock.prototype.collide = function(otherObj){
 	var distance = distToObj(this.x, this.y, otherObj.x, otherObj.y);
-	if (distToObj < (this.radius + otherObj.radius)){
+	if (distance < (this.radius + otherObj.radius)){
 		return true;
 	} else {
 		return false;
@@ -257,20 +257,21 @@ Laser.prototype.update = function(){
 		this.x = this.x % WIDTH;  // x wrap around screen
 	}
 
+	// expiration date for lasers
 	if (this.age >= this.lifespan) {
 		return false; // end
 	} else {
 		return true; // keep
 	}
 };
-// Laser.prototype.collide = function(otherObj){
-// 	var distance = distToObj(this.x, this.y, otherObj.x, otherObj.y);
-// 	if (distToObj < (this.radius + otherObj.radius)){
-// 		return true;
-// 	} else {
-// 		return false;
-// 	}
-// };
+Laser.prototype.collide = function(otherObj){
+	var distance = distToObj(this.x, this.y, otherObj.x, otherObj.y);
+	if (distance < (this.radius + otherObj.radius)){
+		return true;
+	} else {
+		return false;
+	}
+};
 
 
 
