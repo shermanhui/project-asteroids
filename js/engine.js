@@ -107,8 +107,12 @@ var Engine = (function(global) {
         lasers.forEach(function(laser) {
             laser.update(dt);
         });
+        if (LIVES > 0){
+            LIVES -= onCollide(rocks, player);
+            groupsCollide(lasers, rocks);
+        }
+        updateSpriteGroup(lasers);
     }
-
     /* This function initially draws the "game level", it will then call
      * the renderEntities function. Remember, this function is called every
      * game tick (or loop of the game engine) because that's how games work -
