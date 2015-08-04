@@ -25,11 +25,11 @@ var SHIP = 'images/redship.png';
 var shipInfo = new ImageInfo(37.5, 49.5, 75, 99, 30);
 //                            cx, cy,    w,  h, r;
 var SLASER = 'images/shot.png';
-var slaserInfo = new ImageInfo(5, 5, 10, 10, 5, 60);
+var slaserInfo = new ImageInfo(5, 5, 10, 10, 20, 60);
 //                             cx, cy, w, h, r, lifespan;
 
 var ROCK = 'images/rock1.png';
-var rockInfo = new ImageInfo(50.5, 42, 101, 84, 20); //6
+var rockInfo = new ImageInfo(50.5, 42, 101, 84, 30); //6
 //                            cx, cy, w,    h, radius
 
 var DEBRIS = 'images/debris.png';
@@ -196,8 +196,8 @@ Rock.prototype.render = function (x, y, vx, vy, angle, angleV, image, info) {
 	ctx.restore();
 };
 Rock.prototype.update = function(dt){
-	this.x += this.velocity[0];
-	this.y += this.velocity[1];
+	this.x += (this.velocity[0] /1.5);
+	this.y += (this.velocity[1] /1.5);
 	this.angle += this.angleV;
 	if (this.x >= RIGHT){
 		this.x = LEFT;
@@ -263,14 +263,14 @@ Laser.prototype.update = function(){
 		return true; // keep
 	}
 };
-Laser.prototype.collide = function(otherObj){
-	var distance = distToObj(this.x, this.y, otherObj.x, otherObj.y);
-	if (distToObj < (this.radius + otherObj.radius)){
-		return true;
-	} else {
-		return false;
-	}
-};
+// Laser.prototype.collide = function(otherObj){
+// 	var distance = distToObj(this.x, this.y, otherObj.x, otherObj.y);
+// 	if (distToObj < (this.radius + otherObj.radius)){
+// 		return true;
+// 	} else {
+// 		return false;
+// 	}
+// };
 
 
 
@@ -323,7 +323,7 @@ var groupsCollide = function(groupA, groupB) {
 	}
 };
 
-var updateSpriteGroup = function (group) {
+var updateGroup = function (group) {
 	for (var i = 0; i < group.length; i++) {
 		if (group[i].update() === false) {
 			group.splice(i, 1);
@@ -331,7 +331,6 @@ var updateSpriteGroup = function (group) {
 		}
 	}
 };
-
 
 // keysDown is an object that holds an array of keyCodes to be referenced to move the ship
 // It makes it much easier to account for two keyDown actions like left+up
