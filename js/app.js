@@ -339,10 +339,20 @@ var updateGroupOnCollide = function (group) {
 
 var startGame = function(){
 	STARTED = true;
-	GAMEOVER = false;
 	return STARTED;
-	return GAMEOVER;
 }
+var reset = function() {
+	ctx.fillStyle = "rgba(0, 0, 0, 1)";
+	ctx.fillRect(0, 0, WIDTH, HEIGHT);
+	ctx.fillStyle = "rgb(250, 250, 250)";
+	ctx.font = "18px 'Press Start 2P'";
+	ctx.fillText('PRESS START TO PLAY', 250, 300);
+	SCORE = 0;
+	LIVES = 3;
+	STARTED = false;
+	GAMEOVER = false;
+}
+
 
 // keysDown is an object that holds an array of keyCodes to be referenced to move the ship
 // It makes it much easier to account for two keyDown actions like left+up
@@ -383,4 +393,4 @@ restartButton.setAttribute('type', 'button');
 restartButton.setAttribute('type', 'button');
 restartButton.setAttribute('name', 'restart');
 restartButton.setAttribute('value', 'Restart Game');
-restartButton.setAttribute('onClick', 'restartGame()')
+restartButton.setAttribute('onClick', 'reset()')

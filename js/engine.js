@@ -175,7 +175,7 @@ var Engine = (function(global) {
                 }
             }
             if (LIVES === 0){
-                reset();
+                GAMEOVER = true;
             }
         }
         if (!STARTED){
@@ -201,14 +201,14 @@ var Engine = (function(global) {
      * those sorts of things. It's only called once by the init() method.
      */
     function reset() {
-        ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
-        ctx.fillRect(0, 0, WIDTH, HEIGHT);
-        ctx.fillStyle = "rgb(250, 250, 250)";
-        ctx.font = "18px 'Press Start 2P'";
-        ctx.fillText('GAME OVER', 325, 300);
-        //LIVES = 3;
-        STARTED = false;
-        GAMEOVER = true;
+        // ctx.fillStyle = "rgba(0, 0, 0, 1)";
+        // ctx.fillRect(0, 0, WIDTH, HEIGHT);
+        // ctx.fillStyle = "rgb(250, 250, 250)";
+        // ctx.font = "18px 'Press Start 2P'";
+        // ctx.fillText('PRESS START TO PLAY', 250, 300);
+        // SCORE = 0;
+        // LIVES = 3;
+        // STARTED = false;
     }
 
     /* Go ahead and load all of the images we know we're going to need to
