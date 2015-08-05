@@ -2,7 +2,7 @@
 var SCORE = 0;
 var LIVES = 3; 
 var STARTED = false; // initial game state?
-var GAMEOVER = true;
+var GAMEOVER = false;
 
 var FPS = 60;
 var SHIP_SPEED = 10;

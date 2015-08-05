@@ -178,15 +178,21 @@ var Engine = (function(global) {
                 reset();
             }
         }
-        if (GAMEOVER){
+        if (!STARTED){
             ctx.fillStyle = "rgba(0, 0, 0, 1)";
             ctx.fillRect(0, 0, WIDTH, HEIGHT);
             ctx.fillStyle = "rgb(250, 250, 250)";
             ctx.font = "18px 'Press Start 2P'";
             ctx.fillText('PRESS START TO PLAY', 250, 300);
-            SCORE = 0;
-            LIVES = 0;
-            STARTED = false;
+
+        }
+        if (GAMEOVER){
+            ctx.fillStyle = "rgba(0, 0, 0, 1)";
+            ctx.fillRect(0, 0, WIDTH, HEIGHT);
+            ctx.fillStyle = "rgb(250, 250, 250)";
+            ctx.font = "18px 'Press Start 2P'";
+            ctx.fillText('GAME OVER', 250, 300);
+            ctx.fillText('YOUR SCORE:' + SCORE, 250, 350);
         }
     }
 
@@ -200,7 +206,6 @@ var Engine = (function(global) {
         ctx.fillStyle = "rgb(250, 250, 250)";
         ctx.font = "18px 'Press Start 2P'";
         ctx.fillText('GAME OVER', 325, 300);
-        SCORE = 0;
         //LIVES = 3;
         STARTED = false;
         GAMEOVER = true;
