@@ -337,6 +337,11 @@ var updateGroupOnCollide = function (group) {
 	}
 };
 
+var startGame = function(){
+	STARTED = true;
+	GAMEOVER = false;
+}
+
 // keysDown is an object that holds an array of keyCodes to be referenced to move the ship
 // It makes it much easier to account for two keyDown actions like left+up
 var keysDown = {};
@@ -365,3 +370,14 @@ addEventListener("keyup", function (e) {
 
 // Start and Reset Buttons
 var startButton = document.createElement('input');
+startButton.setAttribute('type', 'button');
+startButton.setAttribute('name', 'start');
+startButton.setAttribute('value', 'Start Game');
+startButton.setAttribute('onClick', 'startGame()')
+
+
+var restartButton = document.createElement('input');
+restartButton.setAttribute('type', 'button');
+restartButton.setAttribute('type', 'button');
+restartButton.setAttribute('name', 'restart');
+restartButton.setAttribute('value', 'Restart Game');

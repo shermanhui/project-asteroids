@@ -33,6 +33,8 @@ var Engine = (function(global) {
     canvas.style.border = "1px solid";
     canvas.setAttribute('id', 'canvas');
     doc.body.appendChild(canvas);
+    doc.body.appendChild(startButton);
+    doc.body.appendChild(restartButton);
 
 
     /* This function serves as the kickoff point for the game loop itself
@@ -70,7 +72,7 @@ var Engine = (function(global) {
      * game loop.
      */
     function init() {
-        reset();
+        //reset();
         lastTime = Date.now();
         main();
     }
@@ -151,28 +153,40 @@ var Engine = (function(global) {
      * on your enemy and player entities within app.js
      */
     function renderEntities() {
-        ctx.fillStyle = "rgb(250, 250, 250)";
-        ctx.font = "20px 'Press Start 2P'";
-        ctx.fillText('SCORE: ' + SCORE, 5, 590);
-        /* Loop through all of the objects within the allEnemies array and call
-         * the render function you have defined.
-         */
-        rocks.forEach(function(rock) {
-            rock.render();
-        });
-        lasers.forEach(function(laser) {
-            laser.render();
-        });
-        if (LIVES > 0){
-            player.render();
-            var x = 710;
-            for (var i = 0; i < LIVES; i++){
-                ctx.drawImage(Resources.get(MINISHIP), x, 530, 75, 60)
-                x -= 90;
+        if (STARTED){
+            ctx.fillStyle = "rgb(250, 250, 250)";
+            ctx.font = "20px 'Press Start 2P'";
+            ctx.fillText('SCORE: ' + SCORE, 5, 590);
+            /* Loop through all of the objects within the allEnemies array and call
+            * the render function you have defined.
+            */
+            rocks.forEach(function(rock) {
+                rock.render();
+            });
+            lasers.forEach(function(laser) {
+                laser.render();
+            });
+            if (LIVES > 0){
+                player.render();
+                var x = 710;
+                for (var i = 0; i < LIVES; i++){
+                    ctx.drawImage(Resources.get(MINISHIP), x, 530, 75, 60)
+                    x -= 90;
+                }
+            }
+            if (LIVES === 0){
+                reset();
             }
         }
-        if (LIVES < 0){
-            reset();
+        if (GAMEOVER){
+            ctx.fillStyle = "rgba(0, 0, 0, 1)";
+            ctx.fillRect(0, 0, WIDTH, HEIGHT);
+            ctx.fillStyle = "rgb(250, 250, 250)";
+            ctx.font = "18px 'Press Start 2P'";
+            ctx.fillText('PRESS START TO PLAY', 250, 300);
+            SCORE = 0;
+            LIVES = 0;
+            STARTED = false;
         }
     }
 
@@ -181,8 +195,13 @@ var Engine = (function(global) {
      * those sorts of things. It's only called once by the init() method.
      */
     function reset() {
+        ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
+        ctx.fillRect(0, 0, WIDTH, HEIGHT);
+        ctx.fillStyle = "rgb(250, 250, 250)";
+        ctx.font = "18px 'Press Start 2P'";
+        ctx.fillText('GAME OVER', 325, 300);
         SCORE = 0;
-        LIVES = 3;
+        //LIVES = 3;
         STARTED = false;
         GAMEOVER = true;
     }
