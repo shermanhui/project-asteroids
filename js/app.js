@@ -2,7 +2,7 @@
 var SCORE = 0;
 var LIVES = 3; 
 var STARTED = false; // initial game state?
-var GAMEOVER = false;
+var GAMEOVER = true;
 
 var FPS = 60;
 var SHIP_SPEED = 10;
@@ -21,7 +21,10 @@ var RIGHT = 800;
 var SPACEBG = 'images/space-oj.jpg';
 var spaceInfo = new ImageInfo(400, 300, 800, 600);
 
+var BGPLANET = 'images/planetBG.png';
+
 var SHIP = 'images/redship.png';
+var MINISHIP = 'images/miniship.png'
 var shipInfo = new ImageInfo(37.5, 49.5, 75, 99, 30);
 //                            cx, cy,    w,  h, r;
 var SLASER = 'images/shot.png';
@@ -321,10 +324,11 @@ var onCollide = function(group, thing){
 var groupsCollide = function(groupA, groupB) {
 	for (var i = 0; i < groupA.length; i++){
 		var collisions = onCollide(groupB, groupA[i]);
+		SCORE += (collisions * 10)
 	}
 };
 
-var updateGroup = function (group) {
+var updateGroupOnCollide = function (group) {
 	for (var i = 0; i < group.length; i++) {
 		if (group[i].update() === false) {
 			group.splice(i, 1);
@@ -358,3 +362,6 @@ addEventListener("keydown", function (e) {
 addEventListener("keyup", function (e) {
   delete keysDown[e.keyCode];
 }, false);
+
+// Start and Reset Buttons
+var startButton = document.createElement('input');

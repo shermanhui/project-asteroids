@@ -111,8 +111,8 @@ var Engine = (function(global) {
             LIVES -= onCollide(rocks, player);
             groupsCollide(lasers, rocks);
         }
-        updateGroup(lasers);
-        updateGroup(rocks);
+        updateGroupOnCollide(lasers);
+        updateGroupOnCollide(rocks);
     }
     /* This function initially draws the "game level", it will then call
      * the renderEntities function. Remember, this function is called every
@@ -123,6 +123,7 @@ var Engine = (function(global) {
     function render() {
         // Draw background
         ctx.drawImage(Resources.get(SPACEBG), 0, 0);
+        ctx.drawImage(Resources.get(BGPLANET), 440, 375);
 
         // time element paces the movement of the background
         // moving background math ported from my python version of asteroids 
@@ -150,6 +151,9 @@ var Engine = (function(global) {
      * on your enemy and player entities within app.js
      */
     function renderEntities() {
+        ctx.fillStyle = "rgb(250, 250, 250)";
+        ctx.font = "20px 'Press Start 2P'";
+        ctx.fillText('SCORE: ' + SCORE, 5, 590);
         /* Loop through all of the objects within the allEnemies array and call
          * the render function you have defined.
          */
@@ -159,8 +163,17 @@ var Engine = (function(global) {
         lasers.forEach(function(laser) {
             laser.render();
         });
-        player.render();
-        
+        if (LIVES > 0){
+            player.render();
+            var x = 710;
+            for (var i = 0; i < LIVES; i++){
+                ctx.drawImage(Resources.get(MINISHIP), x, 530, 75, 60)
+                x -= 90;
+            }
+        }
+        if (LIVES < 0){
+            reset();
+        }
     }
 
     /* This function does nothing but it could have been a good place to
@@ -168,12 +181,10 @@ var Engine = (function(global) {
      * those sorts of things. It's only called once by the init() method.
      */
     function reset() {
-        // game state changes SHOULD GO HERE... 
-        // Something like the below? Bind reset onto a button to activate onclick
-        // SCORE = 0;
-        // LIVES = 3;
-        // STARTED = false;
-        // GAMEOVER = false;
+        SCORE = 0;
+        LIVES = 3;
+        STARTED = false;
+        GAMEOVER = true;
     }
 
     /* Go ahead and load all of the images we know we're going to need to
@@ -184,11 +195,13 @@ var Engine = (function(global) {
         'images/space-bg.jpg',
         'images/space-oj.jpg',
         'images/redship.png',
+        'images/miniship.png',
         'images/rock1.png',
         'images/debris.png',
         'images/shot.png',
         'images/slaser.png',
-        'images/bullet.png'
+        'images/bullet.png',
+        'images/planetBG.png'
     ]);
     Resources.onReady(init);
 
