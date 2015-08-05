@@ -21,13 +21,13 @@ var RIGHT = 800;
 var SPACEBG = 'images/space-oj.jpg';
 var spaceInfo = new ImageInfo(400, 300, 800, 600);
 
-var BGPLANET = 'images/planetBG.png';
+var BGPLANET = 'images/planetBG.png'; //background planet image
 
 var SHIP = 'images/redship.png';
-var MINISHIP = 'images/miniship.png'
+var MINISHIP = 'images/miniship.png'; //ships for lifebar
 var shipInfo = new ImageInfo(37.5, 49.5, 75, 99, 30);
 //                            cx, cy,    w,  h, r;
-var SLASER = 'images/shot.png';
+var SLASER = 'images/shot.png'; // lasers
 var slaserInfo = new ImageInfo(5, 5, 10, 10, 20, 60);
 //                             cx, cy, w, h, r, lifespan;
 
@@ -41,7 +41,7 @@ var DEBRIS = 'images/debris.png';
 var TO_RADIANS = Math.PI / 180;
 
 // Math functions 
-// helper functions for velocity
+// velocity
 var angleToVector = function(angle){
 	return [Math.cos(angle), Math.sin(angle)];
 };
@@ -165,8 +165,8 @@ Player.prototype.shoot = function(){
 	var laserYVel = this.velocity[1] + 5 * forwardDir[1];
 	var laser = new Laser(laserX, laserY, laserXVel, laserYVel, this.angle, 0, SLASER, slaserInfo);
 	lasers.push(laser);
-	//console.log(lasers);
 };
+// collision function takes this object and another object and compares their distances to determine if they collide
 Player.prototype.collide = function(otherObj){
 	var distance = distToObj(this.x, this.y, otherObj.x, otherObj.y);
 	if (distance < (this.radius + otherObj.radius)){
@@ -199,8 +199,9 @@ Rock.prototype.render = function (x, y, vx, vy, angle, angleV, image, info) {
 	ctx.restore();
 };
 Rock.prototype.update = function(dt){
-	this.x += (this.velocity[0] /1.5);
-	this.y += (this.velocity[1] /1.5);
+	// changes rock position and makes sure they wrap around the screen
+	this.x += (this.velocity[0] /2);
+	this.y += (this.velocity[1] /2);
 	this.angle += this.angleV;
 	if (this.x >= RIGHT){
 		this.x = LEFT;
@@ -222,6 +223,7 @@ Rock.prototype.collide = function(otherObj){
 	}
 };
 
+// Laser class
 var Laser = function(x, y, vx, vy, angle, angleV, image, info, radius){
 	gameObj.call(this);
 	this.x = x;
@@ -267,7 +269,7 @@ Laser.prototype.update = function(){
 		return true; // keep
 	}
 };
-Laser.prototype.collide = function(otherObj){
+Laser.prototype.collide = function(otherObj){ // checks if laser hits rocks
 	var distance = distToObj(this.x, this.y, otherObj.x, otherObj.y);
 	if (distance < (this.radius + otherObj.radius)){
 		return true;
@@ -276,9 +278,8 @@ Laser.prototype.collide = function(otherObj){
 	}
 };
 
+// Helper Functions listed below
 
-
-// Helper Function to make rocks
 // array of rocks to be rendered
 var rocks = [];
 // array of lasers to be rendered
@@ -324,7 +325,7 @@ var onCollide = function(group, thing){
 var groupsCollide = function(groupA, groupB) {
 	for (var i = 0; i < groupA.length; i++){
 		var collisions = onCollide(groupB, groupA[i]);
-		SCORE += (collisions * 10)
+		SCORE += (collisions * 10);
 	}
 };
 
@@ -340,18 +341,22 @@ var updateGroupOnCollide = function (group) {
 var startGame = function(){
 	STARTED = true;
 	return STARTED;
-}
+};
 var reset = function() {
 	ctx.fillStyle = "rgba(0, 0, 0, 1)";
 	ctx.fillRect(0, 0, WIDTH, HEIGHT);
 	ctx.fillStyle = "rgb(250, 250, 250)";
 	ctx.font = "18px 'Press Start 2P'";
 	ctx.fillText('PRESS START TO PLAY', 250, 300);
+	player.x = 400;
+	player.y = 300;
+	player.velocity = [0, 0];
+	player.angle = 0;
 	SCORE = 0;
 	LIVES = 3;
 	STARTED = false;
 	GAMEOVER = false;
-}
+};
 
 
 // keysDown is an object that holds an array of keyCodes to be referenced to move the ship
@@ -385,7 +390,7 @@ var startButton = document.createElement('input');
 startButton.setAttribute('type', 'button');
 startButton.setAttribute('name', 'start');
 startButton.setAttribute('value', 'Start Game');
-startButton.setAttribute('onClick', 'startGame()')
+startButton.setAttribute('onClick', 'startGame()');
 
 
 var restartButton = document.createElement('input');
@@ -393,4 +398,4 @@ restartButton.setAttribute('type', 'button');
 restartButton.setAttribute('type', 'button');
 restartButton.setAttribute('name', 'restart');
 restartButton.setAttribute('value', 'Restart Game');
-restartButton.setAttribute('onClick', 'reset()')
+restartButton.setAttribute('onClick', 'reset()');
