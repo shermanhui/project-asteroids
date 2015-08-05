@@ -3,7 +3,7 @@ body {
     font-family: 'Press Start 2P', cursive, Fallback, sans-serif;
 }
 
-/* centers the canvas */
+/* centers the canvas */ /* this is affecting how the buttons are rendering on screen */
 canvas {
     padding: 0;
     margin: auto;
