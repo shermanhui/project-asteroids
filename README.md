@@ -94,3 +94,6 @@ This project is licensed under the MIT License
 - ~~Keep track of score based on number of asteroids destroyed~~
 - ~~When lives < 0; game-over~~
 
+###General
+- Add sound??
+
