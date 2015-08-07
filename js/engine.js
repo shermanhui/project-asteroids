@@ -109,12 +109,16 @@ var Engine = (function(global) {
         lasers.forEach(function(laser) {
             laser.update(dt);
         });
+        texts.forEach(function(text) {
+            text.update(dt);
+        });
         if (LIVES > 0){
             LIVES -= onCollide(rocks, player);
             groupsCollide(lasers, rocks);
         }
         updateGroupOnCollide(lasers);
         updateGroupOnCollide(rocks);
+        updateGroupOnCollide(texts);
     }
     /* This function initially draws the "game level", it will then call
      * the renderEntities function. Remember, this function is called every
@@ -165,6 +169,9 @@ var Engine = (function(global) {
             });
             lasers.forEach(function(laser) {
                 laser.render();
+            });
+            texts.forEach(function(text) {
+                text.render();
             });
             if (LIVES > 0){
                 player.render();

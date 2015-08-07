@@ -24,7 +24,7 @@ var spaceInfo = new ImageInfo(400, 300, 800, 600);
 var BGPLANET = 'images/planetBG.png'; //background planet image
 
 var SHIP = 'images/redship.png';
-var MINISHIP = 'images/miniship.png'; //ships for lifebar
+var MINISHIP = 'images/miniship.png'; //ships for lifebar no shipInfo needed for this
 var shipInfo = new ImageInfo(37.5, 49.5, 75, 99, 30);
 //                            cx, cy,    w,  h, r;
 var SLASER = 'images/shot.png'; // lasers
@@ -70,13 +70,6 @@ var gameObj = function(x, y, vx, vy, angle, angleV, image, info){
 	this.age = 0;
 	this.lifespan = slaserInfo.lifespan;
 };
-gameObj.prototype.render = function(){
-	ctx.save();
-	ctx.translate(this.x, this.y);
-	ctx.rotate(this.angle * TO_RADIANS);
-	ctx.drawImage(Resources.get(SHIP), 0, 0, shipInfo.width, shipInfo.height, -shipInfo.centerX, -shipInfo.centerY, shipInfo.width, shipInfo.height);
-	ctx.restore();
-};
 gameObj.prototype.collide = function(otherObj){
 	var distance = distToObj(this.x, this.y, otherObj.x, otherObj.y);
 	if (distToObj < (this.radius + otherObj.radius)){
@@ -102,7 +95,13 @@ var Player = function(vx, vy, angle, angleV, image, info){
 
 Player.prototype = Object.create(gameObj.prototype);
 Player.prototype.constructor = Player;
-
+Player.prototype.render = function(){
+	ctx.save();
+	ctx.translate(this.x, this.y);
+	ctx.rotate(this.angle * TO_RADIANS);
+	ctx.drawImage(Resources.get(SHIP), 0, 0, shipInfo.width, shipInfo.height, -shipInfo.centerX, -shipInfo.centerY, shipInfo.width, shipInfo.height);
+	ctx.restore();
+};
 // For every downKey, the Player will move accordingly
 Player.prototype.update = function(dt){
 	// control ship movement based on acceleration and not velocity
@@ -278,6 +277,26 @@ Laser.prototype.collide = function(otherObj){ // checks if laser hits rocks
 		return false;
 	}
 };
+// Points on rock kill
+var pointText = function(x, y){
+	this.x = x;
+	this.y = y;
+	this.lifespan = 15;
+	this.age = 0;
+};
+pointText.prototype.render = function(){
+	ctx.save();
+	ctx.fillText('+10pts', this.x, this.y);
+	ctx.restore();
+}
+pointText.prototype.update = function(){
+	this.age += 1
+	if (this.age >= this.lifespan){
+		return false;
+	} else {
+		return true;
+	}
+}
 
 // Helper Functions listed below
 
@@ -285,8 +304,11 @@ Laser.prototype.collide = function(otherObj){ // checks if laser hits rocks
 var rocks = [];
 // array of lasers to be rendered
 var lasers = [];
+// points earned texts
+var texts = [];
 // make new Player at default x, y position that's in Player
 var player = new Player(0, 0, 0, 0, SHIP, shipInfo);
+
 
 // Returns a random integer between min (included) and max (excluded)
 // Using Math.round() will give you a non-uniform distribution!
@@ -314,6 +336,7 @@ var onCollide = function(group, thing){
 	var collisions = 0;
 	for (var i = 0; i < group.length; i++){
 		if (group[i].collide(thing)){
+			texts.push(new pointText(group[i].x, group[i].y));
 			collisions += 1;
 			group.splice(i, 1);
 			thing.lifespan = 0;
