@@ -2,7 +2,6 @@
 body {
     font-family: 'Press Start 2P', cursive, Fallback, sans-serif;
 }
-
 /* centers the canvas */ /* this is affecting how the buttons are rendering on screen */
 canvas {
     padding: 0;
@@ -16,7 +15,19 @@ canvas {
     left: 0;
     right: 0;
 }
-
+/* instructions */
+#instructions {
+    margin: auto;
+    margin-right: 15px;
+    display: block;
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    left: 80%;
+    top: 15%;
+    color:white;
+}
+/* button position */
 #button-div {
     margin: auto;
     display: block;
@@ -26,7 +37,7 @@ canvas {
     top: 15%;
     right: 82%;
 }
-
+/* button style */
 #button{
     font-family: 'Press Start 2P', cursive, Fallback, sans-serif;
     color: white;
@@ -36,7 +47,7 @@ canvas {
     border-style: none;
     cursor: pointer;
 }
-
+/* creates border on hover */
 #button:hover {
     border: 1px solid;
     border-width: 5px;
@@ -49,11 +60,3 @@ canvas {
     left: 50%;
     margin-left: -200px;
 }​
-/*#canvas {
-    padding-left: 0;
-    padding-right: 0;
-    margin-left: auto;
-    margin-right: auto;
-    display: block;
-    width: 800px;
-}*/

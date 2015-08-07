@@ -191,7 +191,7 @@ var Engine = (function(global) {
             ctx.fillRect(0, 0, WIDTH, HEIGHT);
             ctx.fillStyle = "rgb(250, 250, 250)";
             ctx.font = "18px 'Press Start 2P'";
-            ctx.fillText('GAME OVER :(', 250, 250);
+            ctx.fillText('GAME OVER!', 250, 250);
             ctx.fillText('YOUR SCORE:' + SCORE, 250, 300);
         }
     }
