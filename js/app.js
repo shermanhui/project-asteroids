@@ -32,9 +32,10 @@ var slaserInfo = new ImageInfo(5, 5, 10, 10, 20, 60);
 //                             cx, cy, w, h, r, lifespan;
 
 var ROCK = ['images/rock1.png', 'images/rock2.png'];
-var rockInfo = new ImageInfo(50.5, 42, 101, 84, 30); //6
+var rockInfo = new ImageInfo(50.5, 42, 101, 84, 30); 
 //                            cx, cy, w,    h, radius
 
+// background debris
 var DEBRIS = 'images/debris.png';
 
 // use this to multiply an object to radians
@@ -79,7 +80,7 @@ gameObj.prototype.collide = function(otherObj){
 	}
 };
 
-var Player = function(vx, vy, angle, angleV, image, info){
+var Player = function(vx, vy, angle, angleV, image, info, identity){
 	gameObj.call(this);
 	this.sprite = SHIP;
 	this.x = 400;
@@ -91,6 +92,7 @@ var Player = function(vx, vy, angle, angleV, image, info){
 	this.imageCenterX = info.centerX;
 	this.imageCenterY = info.centerY;
 	this.radius = info.radius;
+	this.identity = identity;
 };
 
 Player.prototype = Object.create(gameObj.prototype);
@@ -162,7 +164,7 @@ Player.prototype.shoot = function(){
 	var laserY = this.y + this.radius * forwardDir[1];
 	var laserXVel = this.velocity[0] + 5 * forwardDir[0];
 	var laserYVel = this.velocity[1] + 5 * forwardDir[1];
-	var laser = new Laser(laserX, laserY, laserXVel, laserYVel, this.angle, 0, SLASER, slaserInfo);
+	var laser = new Laser(laserX, laserY, laserXVel, laserYVel, this.angle, 0, SLASER, slaserInfo, 'laser');
 	lasers.push(laser);
 };
 // collision function takes this object and another object and compares their distances to determine if they collide
@@ -176,7 +178,7 @@ Player.prototype.collide = function(otherObj){
 };
 
 // Rock class
-var Rock = function(x, y, vx, vy, angle, angleV, image, info){
+var Rock = function(x, y, vx, vy, angle, angleV, image, info, identity){
 	gameObj.call(this);
 	this.sprite = ROCK[Math.floor(Math.random() * 2)];
 	this.x = x;
@@ -187,6 +189,7 @@ var Rock = function(x, y, vx, vy, angle, angleV, image, info){
 	this.imageCenterX = info.centerX;
 	this.imageCenterY = info.centerY;
 	this.radius = info.radius;
+	this.identity = identity;
 };
 Rock.prototype = Object.create(gameObj.prototype);
 Rock.prototype.constructor = Rock;
@@ -224,7 +227,7 @@ Rock.prototype.collide = function(otherObj){
 };
 
 // Laser class
-var Laser = function(x, y, vx, vy, angle, angleV, image, info, radius){
+var Laser = function(x, y, vx, vy, angle, angleV, image, info, radius, identity){
 	gameObj.call(this);
 	this.x = x;
 	this.y = y;
@@ -235,6 +238,7 @@ var Laser = function(x, y, vx, vy, angle, angleV, image, info, radius){
 	this.imageCenterY = slaserInfo.centerY;
 	this.radius = info.radius;
 	this.lifespan = info.lifespan;
+	this.identity = identity;
 };
 Laser.prototype = Object.create(gameObj.prototype);
 Laser.prototype.constructor = Laser;
@@ -278,7 +282,8 @@ Laser.prototype.collide = function(otherObj){ // checks if laser hits rocks
 	}
 };
 // Points on rock kill
-var pointText = function(x, y){
+var pointText = function(text, x, y){
+	this.text = text;
 	this.x = x;
 	this.y = y;
 	this.lifespan = 15;
@@ -286,7 +291,7 @@ var pointText = function(x, y){
 };
 pointText.prototype.render = function(){
 	ctx.save();
-	ctx.fillText('+10pts', this.x, this.y);
+	ctx.fillText(this.text, this.x, this.y);
 	ctx.restore();
 }
 pointText.prototype.update = function(){
@@ -304,10 +309,10 @@ pointText.prototype.update = function(){
 var rocks = [];
 // array of lasers to be rendered
 var lasers = [];
-// points earned texts
+// explosion texts
 var texts = [];
 // make new Player at default x, y position that's in Player
-var player = new Player(0, 0, 0, 0, SHIP, shipInfo);
+var player = new Player(0, 0, 0, 0, SHIP, shipInfo, 'ship');
 
 
 // Returns a random integer between min (included) and max (excluded)
@@ -327,7 +332,7 @@ var rockMaker = function(){
 		var image = ROCK;
 		var info = rockInfo;
 		// new Rock = (x, y, vx, vy, angle, angleV, image, info);
-		var rock = new Rock(x, y, vx, vy, angle, angleV, ROCK, rockInfo);
+		var rock = new Rock(x, y, vx, vy, angle, angleV, ROCK, rockInfo, 'rock');
 		rocks.push(rock);
 	}
 };
@@ -336,7 +341,11 @@ var onCollide = function(group, thing){
 	var collisions = 0;
 	for (var i = 0; i < group.length; i++){
 		if (group[i].collide(thing)){
-			texts.push(new pointText(group[i].x, group[i].y));
+			if (group[i].identity == "rock" && thing.identity == "ship"){
+				texts.push(new pointText('-1 LIFE', group[i].x, group[i].y));
+			} else {
+				texts.push(new pointText('+10 pts', group[i].x, group[i].y));
+			}
 			collisions += 1;
 			group.splice(i, 1);
 			thing.lifespan = 0;
