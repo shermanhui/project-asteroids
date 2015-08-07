@@ -18,7 +18,7 @@ Your ship and missiles will wrap around the screen...but so will the asteroids!
 
 Avoid the asteroids and build up your score! Each asteroid is worth 10 points!
 
-Each collision with an asteroid will reduce your lives by 1.
+Each collision with an asteroid will reduce your lives by 1. (Collision mechanics are pretty generous, collisions near the wing tips don't count! :P)
 
 ## Features
 
@@ -77,7 +77,8 @@ This project is licensed under the MIT License
  - ~~Asteroids should have random momentum/movement~~
  	- ~~Asteroids should also be able to wrap around the screen~~
  	- ~~Asteroids should SPIN...this is hard~~
--Option: Asteroids should be able to split into smaller asteroids
+	- Option: Asteroids should be able to split into smaller asteroids
+	- Option: Rocks should bounce off of each other!
 
 #### Collision (probably last to do..)
 - ~~must handle collision between ship and rock, rock and missiles...~~
@@ -89,6 +90,7 @@ This project is licensed under the MIT License
 - pause functionality
 - able to choose a space ship
 - maybe work on using on key events to start instead of button events..
+- Add difficulty levels
 
 ###Score and Life system
 - ~~Keep track of score based on number of asteroids destroyed~~
@@ -96,6 +98,7 @@ This project is licensed under the MIT License
 
 ###General
 - Add sound??
+- Smoother menu functionality
 - Cleaner code implementation
 - Better DOM manipulation 
 
