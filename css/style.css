@@ -36,6 +36,7 @@ canvas {
     right: 77%;
     top: 12%;
     color:white;
+    text-align: center;
 }
 /* button position */
 #button-div {
