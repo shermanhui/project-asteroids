@@ -33,6 +33,7 @@ var Engine = (function(global) {
     canvas.style.border = "1px solid white";
     canvas.setAttribute('id', 'canvas');
     doc.body.appendChild(canvas);
+    // append start and restart buttons
     doc.getElementById('button-div').appendChild(startButton);
     doc.getElementById('button-div').appendChild(restartButton);
 
@@ -99,9 +100,7 @@ var Engine = (function(global) {
      * render methods.
      */
     function updateEntities(dt) {
-        // allEnemies.forEach(function(enemy) {
-        //     enemy.update(dt);
-        // });
+        // updates all game objects
         player.update();
         rocks.forEach(function(rock){
             rock.update(dt);
@@ -112,10 +111,12 @@ var Engine = (function(global) {
         texts.forEach(function(text) {
             text.update(dt);
         });
+        // controls life points
         if (LIVES > 0){
             LIVES -= onCollide(rocks, player);
             groupsCollide(lasers, rocks);
         }
+        // updates game screen to reflect objects that need to be removed
         updateGroupOnCollide(lasers);
         updateGroupOnCollide(rocks);
         updateGroupOnCollide(texts);
@@ -158,6 +159,7 @@ var Engine = (function(global) {
      */
     function renderEntities() {
         if (STARTED){
+            // Renders Points on Screen
             ctx.fillStyle = "rgb(250, 250, 250)";
             ctx.font = "20px 'Press Start 2P'";
             ctx.fillText('SCORE: ' + SCORE, 5, 590);
@@ -175,16 +177,17 @@ var Engine = (function(global) {
             });
             if (LIVES > 0){
                 player.render();
-                var x = 710;
+                var x = 730;
                 for (var i = 0; i < LIVES; i++){
-                    ctx.drawImage(Resources.get(MINISHIP), x, 530, 75, 60)
-                    x -= 90;
+                    ctx.drawImage(Resources.get(MINISHIP), x, 550, 55, 40);
+                    x -= 70;
                 }
             }
             if (LIVES === 0){
                 GAMEOVER = true;
             }
         }
+        // Renders Start Screen
         if (!STARTED){
             ctx.fillStyle = "rgba(0, 0, 0, 1)";
             ctx.fillRect(0, 0, WIDTH, HEIGHT);
@@ -193,6 +196,7 @@ var Engine = (function(global) {
             ctx.fillText('PRESS START TO PLAY', 250, 300);
 
         }
+        // Renders Game Over Screen
         if (GAMEOVER){
             ctx.fillStyle = "rgba(0, 0, 0, 1)";
             ctx.fillRect(0, 0, WIDTH, HEIGHT);

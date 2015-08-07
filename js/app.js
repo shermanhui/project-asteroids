@@ -1,14 +1,8 @@
 // global variables
 var SCORE = 0;
-var LIVES = 3; 
+var LIVES = 5; 
 var STARTED = false; // initial game state?
 var GAMEOVER = false;
-
-var FPS = 60;
-var SHIP_SPEED = 10;
-var SHIP_ANGLE = 100;
-var VECTOR_X = 0;
-var VECTOR_Y = 0;
 
 // canvas variables
 var WIDTH = 800;
@@ -25,14 +19,14 @@ var BGPLANET = 'images/planetBG.png'; //background planet image
 
 var SHIP = 'images/redship.png';
 var MINISHIP = 'images/miniship.png'; //ships for lifebar no shipInfo needed for this
-var shipInfo = new ImageInfo(37.5, 49.5, 75, 99, 30);
+var shipInfo = new ImageInfo(37.5, 49.5, 75, 99, 40);
 //                            cx, cy,    w,  h, r;
 var SLASER = 'images/shot.png'; // lasers
 var slaserInfo = new ImageInfo(5, 5, 10, 10, 20, 60);
 //                             cx, cy, w, h, r, lifespan;
 
 var ROCK = ['images/rock1.png', 'images/rock2.png'];
-var rockInfo = new ImageInfo(50.5, 42, 101, 84, 30); 
+var rockInfo = new ImageInfo(50.5, 42, 101, 84, 20); 
 //                            cx, cy, w,    h, radius
 
 // background debris
@@ -52,6 +46,7 @@ var distToObj = function (px, py, qx, qy) {
 	return Math.sqrt(Math.pow(px - qx, 2) + Math.pow(py - qy, 2));
 };
 
+// gathers info for images so it's easier to reference data
 function ImageInfo(centerX, centerY, width, height, radius, lifespan) {
 	this.centerX = centerX;
 	this.centerY = centerY;
@@ -60,7 +55,7 @@ function ImageInfo(centerX, centerY, width, height, radius, lifespan) {
 	this.radius = radius;
 	this.lifespan = lifespan;
 }
-
+// gameobject super class
 var gameObj = function(x, y, vx, vy, angle, angleV, image, info){
 	this.sprite ='';
 	this.x = x;
@@ -71,6 +66,8 @@ var gameObj = function(x, y, vx, vy, angle, angleV, image, info){
 	this.age = 0;
 	this.lifespan = slaserInfo.lifespan;
 };
+// collision function takes this object and another object and compares their distances to determine if they collide
+// Player.collide falls through to here
 gameObj.prototype.collide = function(otherObj){
 	var distance = distToObj(this.x, this.y, otherObj.x, otherObj.y);
 	if (distToObj < (this.radius + otherObj.radius)){
@@ -157,6 +154,7 @@ Player.prototype.update = function(dt){
 	this.velocity[0] *= 0.99;
 	this.velocity[1] *= 0.99;
 };
+// ship shoots lasers based off of the ships details
 Player.prototype.shoot = function(){
 	var vangle = this.angle * TO_RADIANS;
 	var forwardDir = angleToVector(vangle);
@@ -167,15 +165,9 @@ Player.prototype.shoot = function(){
 	var laser = new Laser(laserX, laserY, laserXVel, laserYVel, this.angle, 0, SLASER, slaserInfo, 'laser');
 	lasers.push(laser);
 };
-// collision function takes this object and another object and compares their distances to determine if they collide
-Player.prototype.collide = function(otherObj){
-	var distance = distToObj(this.x, this.y, otherObj.x, otherObj.y);
-	if (distance < (this.radius + otherObj.radius)){
-		return true;
-	} else {
-		return false;
-	}
-};
+
+// make new Player at default x, y position that's in Player
+var player = new Player(0, 0, 0, 0, SHIP, shipInfo, 'ship');
 
 // Rock class
 var Rock = function(x, y, vx, vy, angle, angleV, image, info, identity){
@@ -217,6 +209,7 @@ Rock.prototype.update = function(dt){
 		this.y = BOTTOM;
 	}
 };
+// collision detection
 Rock.prototype.collide = function(otherObj){
 	var distance = distToObj(this.x, this.y, otherObj.x, otherObj.y);
 	if (distance < (this.radius + otherObj.radius)){
@@ -293,15 +286,15 @@ pointText.prototype.render = function(){
 	ctx.save();
 	ctx.fillText(this.text, this.x, this.y);
 	ctx.restore();
-}
+};
 pointText.prototype.update = function(){
-	this.age += 1
+	this.age += 1;
 	if (this.age >= this.lifespan){
 		return false;
 	} else {
 		return true;
 	}
-}
+};
 
 // Helper Functions listed below
 
@@ -311,9 +304,6 @@ var rocks = [];
 var lasers = [];
 // explosion texts
 var texts = [];
-// make new Player at default x, y position that's in Player
-var player = new Player(0, 0, 0, 0, SHIP, shipInfo, 'ship');
-
 
 // Returns a random integer between min (included) and max (excluded)
 // Using Math.round() will give you a non-uniform distribution!
@@ -322,7 +312,7 @@ function getRandomIntInclusive(min, max){
 }
 // make individual rocks to be pushed to rocks array
 var rockMaker = function(){
-	if (rocks.length < 3) {
+	if (rocks.length < 8) {
 		var x = getRandomIntInclusive(0, WIDTH);
 		var y = getRandomIntInclusive(0, HEIGHT);
 		var vx = getRandomIntInclusive(-6, 6);
@@ -354,14 +344,14 @@ var onCollide = function(group, thing){
 	} 
 	return collisions;
 };
-
+// handles group object collisions i.e lasers on rocks
 var groupsCollide = function(groupA, groupB) {
 	for (var i = 0; i < groupA.length; i++){
 		var collisions = onCollide(groupB, groupA[i]);
 		SCORE += (collisions * 10);
 	}
 };
-
+// removes objects from screen once they collide
 var updateGroupOnCollide = function (group) {
 	for (var i = 0; i < group.length; i++) {
 		if (group[i].update() === false) {
@@ -370,11 +360,12 @@ var updateGroupOnCollide = function (group) {
 		}
 	}
 };
-
+// start and reset button functionalities
 var startGame = function(){
 	STARTED = true;
 	return STARTED;
 };
+// resets the game by drawing the start to play screen again and resetting the game data
 var reset = function() {
 	ctx.fillStyle = "rgba(0, 0, 0, 1)";
 	ctx.fillRect(0, 0, WIDTH, HEIGHT);
@@ -385,12 +376,12 @@ var reset = function() {
 	player.y = 300;
 	player.velocity = [0, 0];
 	player.angle = 0;
+	rocks = [];
 	SCORE = 0;
-	LIVES = 3;
+	LIVES = 5;
 	STARTED = false;
 	GAMEOVER = false;
 };
-
 
 // keysDown is an object that holds an array of keyCodes to be referenced to move the ship
 // It makes it much easier to account for two keyDown actions like left+up
@@ -425,7 +416,6 @@ startButton.setAttribute('type', 'button');
 startButton.setAttribute('name', 'start');
 startButton.setAttribute('value', 'Start Game');
 startButton.setAttribute('onClick', 'startGame()');
-
 
 var restartButton = document.createElement('input');
 restartButton.setAttribute('id', 'button');
