@@ -1,7 +1,7 @@
 // global variables
 var SCORE = 0;
 var LIVES = 5; 
-var STARTED = false; // initial game state?
+var STARTED = false;
 var GAMEOVER = false;
 
 // canvas variables
@@ -12,10 +12,9 @@ var LEFT = 0;
 var BOTTOM = 600;
 var RIGHT = 800;
 
+// image variables
 var SPACEBG = 'images/space-oj.jpg';
 var spaceInfo = new ImageInfo(400, 300, 800, 600);
-
-var BGPLANET = 'images/planetBG.png'; //background planet image
 
 var SHIP = 'images/redship.png';
 var MINISHIP = 'images/miniship.png'; //ships for lifebar no shipInfo needed for this
@@ -29,25 +28,22 @@ var ROCK = ['images/rock1.png', 'images/rock2.png'];
 var rockInfo = new ImageInfo(50.5, 42, 101, 84, 20); 
 //                            cx, cy, w,    h, radius
 
-// background debris
-var DEBRIS = 'images/debris.png';
-
-// use this to multiply an object to radians
-var TO_RADIANS = Math.PI / 180;
+var DEBRIS = 'images/debris.png'; // background debris
+var BGPLANET = 'images/planetBG.png'; //background planet image
 
 // Math functions 
-// velocity
-var angleToVector = function(angle){
+
+var angleToVector = function(angle){	// Converts angle to vector to be used for velocity
 	return [Math.cos(angle), Math.sin(angle)];
 };
 
-// disance between to objects
-var distToObj = function (px, py, qx, qy) {
+var distToObj = function (px, py, qx, qy) {		// disance between to objects
 	return Math.sqrt(Math.pow(px - qx, 2) + Math.pow(py - qy, 2));
 };
 
-// gathers info for images so it's easier to reference data
-function ImageInfo(centerX, centerY, width, height, radius, lifespan) {
+var TO_RADIANS = Math.PI / 180; // use this to multiply an object to radians
+
+function ImageInfo(centerX, centerY, width, height, radius, lifespan) {	// gathers info for images so it's easier to reference data
 	this.centerX = centerX;
 	this.centerY = centerY;
 	this.width = width;
@@ -55,8 +51,8 @@ function ImageInfo(centerX, centerY, width, height, radius, lifespan) {
 	this.radius = radius;
 	this.lifespan = lifespan;
 }
-// gameobject super class
-var gameObj = function(x, y, vx, vy, angle, angleV, image, info){
+
+var gameObj = function(x, y, vx, vy, angle, angleV, image, info){	// gameobject super class
 	this.sprite ='';
 	this.x = x;
 	this.y = y;
@@ -66,9 +62,8 @@ var gameObj = function(x, y, vx, vy, angle, angleV, image, info){
 	this.age = 0;
 	this.lifespan = slaserInfo.lifespan;
 };
-// collision function takes this object and another object and compares their distances to determine if they collide
-// Player.collide falls through to here
-gameObj.prototype.collide = function(otherObj){
+
+gameObj.prototype.collide = function(otherObj){ // Player.collide falls through to here, handles collision detection for the ship and rocks
 	var distance = distToObj(this.x, this.y, otherObj.x, otherObj.y);
 	if (distToObj < (this.radius + otherObj.radius)){
 		return true;
@@ -77,7 +72,7 @@ gameObj.prototype.collide = function(otherObj){
 	}
 };
 
-var Player = function(vx, vy, angle, angleV, image, info, identity){
+var Player = function(vx, vy, angle, angleV, image, info, identity){	// Define Player Object Variables
 	gameObj.call(this);
 	this.sprite = SHIP;
 	this.x = 400;
@@ -94,7 +89,7 @@ var Player = function(vx, vy, angle, angleV, image, info, identity){
 
 Player.prototype = Object.create(gameObj.prototype);
 Player.prototype.constructor = Player;
-Player.prototype.render = function(){
+Player.prototype.render = function(){ // render the player ship
 	ctx.save();
 	ctx.translate(this.x, this.y);
 	ctx.rotate(this.angle * TO_RADIANS);
@@ -103,34 +98,34 @@ Player.prototype.render = function(){
 };
 // For every downKey, the Player will move accordingly
 Player.prototype.update = function(dt){
-	// control ship movement based on acceleration and not velocity
-	// angle and angleV control the orientation of the ship and how fast it rotates respectively
-	// key handlers should control angleV and update method should update self.angle += self.angleV
+	/* control ship movement based on acceleration and not velocity
+	 * angle and angleV control the orientation of the ship and how fast it rotates respectively
+	 * key handlers should control angleV and update method should update self.angle += self.angleV
 
-	// basic physics = position = x,y, velocity = vx, vy, accel = angleToVector
-	// position update is position += velocity, velocity update is velocity += acceleration
+	 * basic physics = position = x,y, velocity = vx, vy, accel = angleToVector
+	 * position update is position += velocity, velocity update is velocity += acceleration
 
-	// ship class has pos, vel, angle, thrust
-	// position update is self.pos[0] += self.vel[0], self.pos[1] += self.vel[1]
+	 * ship class has pos, vel, angle, thrust
+	 * position update is self.pos[0] += self.vel[0], self.pos[1] += self.vel[1]
+	 */
 
-	// update thrust
-	if (38 in keysDown) { // pushing down the up key turns on the thrust
+	if (38 in keysDown) { // update thrust on keydown
 		this.thrust = true;
 	} else {
 		this.thrust = false;
 	}
-	// update angular velocity to turn ship
-	if (37 in keysDown) { // left rotation
+
+	if (37 in keysDown) { // left rotation updated via angular rotation
 		this.angleV = -5;
 	} else if (39 in keysDown) { // right rotation
 		this.angleV = +5;
 	} else {
 		this.angleV = 0;
 	}
-	// update ang
-	this.angle += this.angleV;
-	// update position
-	if (this.y <= 0) {
+
+	this.angle += this.angleV; 	// update ang
+
+	if (this.y <= 0) { 	// update position
 		this.y = HEIGHT; // reset to top of screen after you hit bottom
 	} else {
 		this.y = (this.y + this.velocity[1]) % HEIGHT; // ship update y wrap around screen
@@ -140,9 +135,10 @@ Player.prototype.update = function(dt){
 	} else {
 		this.x = (this.x + this.velocity[0]) % WIDTH;  // ship update x wrap around screen
 	}
-	// update velocity
-	// velocity update is acceleration in direction of forward vector which is given by angleToVector
-	// we update the forward vector on thrust.
+	/* update velocity
+	 * velocity update is acceleration in direction of forward vector which is given by angleToVector
+	 * we update the forward vector on thrust.
+	 */ 
 	if (this.thrust) {
 		var angle = this.angle * TO_RADIANS;
 		var accel = angleToVector(angle);
@@ -150,12 +146,12 @@ Player.prototype.update = function(dt){
 		this.velocity[1] += accel[1] / 10;
 	}
 
-	// friction needed to help control ship!
+	// friction needed to help control ship! this eventually wittles down the velocity
 	this.velocity[0] *= 0.99;
 	this.velocity[1] *= 0.99;
 };
-// ship shoots lasers based off of the ships details
-Player.prototype.shoot = function(){
+
+Player.prototype.shoot = function(){ 	// ship shoots lasers based off of the ships details
 	var vangle = this.angle * TO_RADIANS;
 	var forwardDir = angleToVector(vangle);
 	var laserX = this.x + this.radius * forwardDir[0];
@@ -169,8 +165,7 @@ Player.prototype.shoot = function(){
 // make new Player at default x, y position that's in Player
 var player = new Player(0, 0, 0, 0, SHIP, shipInfo, 'ship');
 
-// Rock class
-var Rock = function(x, y, vx, vy, angle, angleV, image, info, identity){
+var Rock = function(x, y, vx, vy, angle, angleV, image, info, identity){	// Rock class
 	gameObj.call(this);
 	this.sprite = ROCK[Math.floor(Math.random() * 2)];
 	this.x = x;
@@ -193,12 +188,11 @@ Rock.prototype.render = function (x, y, vx, vy, angle, angleV, image, info) {
 	ctx.drawImage(Resources.get(ROCK), 0, 0, rockInfo.width, rockInfo.height, -rockInfo.centerX, -rockInfo.centerY, rockInfo.width, rockInfo.height);
 	ctx.restore();
 };
-Rock.prototype.update = function(dt){
-	// changes rock position and makes sure they wrap around the screen
+Rock.prototype.update = function(dt){	// changes rock position and makes sure they wrap around the screen
 	this.x += (this.velocity[0] /2);
 	this.y += (this.velocity[1] /2);
 	this.angle += this.angleV;
-	if (this.x >= RIGHT){
+	if (this.x >= RIGHT){ // Handles screen wrapping for the rocks
 		this.x = LEFT;
 	} else if (this.x <= LEFT){
 		this.x = RIGHT;
@@ -209,8 +203,8 @@ Rock.prototype.update = function(dt){
 		this.y = BOTTOM;
 	}
 };
-// collision detection
-Rock.prototype.collide = function(otherObj){
+
+Rock.prototype.collide = function(otherObj){	// collision detection
 	var distance = distToObj(this.x, this.y, otherObj.x, otherObj.y);
 	if (distance < (this.radius + otherObj.radius)){
 		return true;
@@ -219,8 +213,7 @@ Rock.prototype.collide = function(otherObj){
 	}
 };
 
-// Laser class
-var Laser = function(x, y, vx, vy, angle, angleV, image, info, radius, identity){
+var Laser = function(x, y, vx, vy, angle, angleV, image, info, radius, identity){ // Laser class
 	gameObj.call(this);
 	this.x = x;
 	this.y = y;
@@ -266,7 +259,7 @@ Laser.prototype.update = function(){
 		return true; // keep
 	}
 };
-Laser.prototype.collide = function(otherObj){ // checks if laser hits rocks
+Laser.prototype.collide = function(otherObj){ 	// checks if laser hits rocks
 	var distance = distToObj(this.x, this.y, otherObj.x, otherObj.y);
 	if (distance < (this.radius + otherObj.radius)){
 		return true;
@@ -274,8 +267,8 @@ Laser.prototype.collide = function(otherObj){ // checks if laser hits rocks
 		return false;
 	}
 };
-// Points on rock kill
-var pointText = function(text, x, y){
+
+var pointText = function(text, x, y){	// Render Text on Rock Kill
 	this.text = text;
 	this.x = x;
 	this.y = y;
@@ -298,20 +291,19 @@ pointText.prototype.update = function(){
 
 // Helper Functions listed below
 
-// array of rocks to be rendered
-var rocks = [];
-// array of lasers to be rendered
-var lasers = [];
-// explosion texts
-var texts = [];
+var rocks = [];	// array of rocks to be rendered
+
+var lasers = []; // array of lasers to be rendered
+
+var texts = []; // explosion texts
 
 // Returns a random integer between min (included) and max (excluded)
 // Using Math.round() will give you a non-uniform distribution!
 function getRandomIntInclusive(min, max){
 	return Math.floor(Math.random() * (max - min + 1)) + min;
 }
-// make individual rocks to be pushed to rocks array
-var rockMaker = function(){
+
+var rockMaker = function(){ // make individual rocks to be pushed to rocks array
 	if (rocks.length < 8) {
 		var x = getRandomIntInclusive(0, WIDTH);
 		var y = getRandomIntInclusive(0, HEIGHT);
@@ -321,13 +313,12 @@ var rockMaker = function(){
 		var angleV = getRandomIntInclusive(-6, 6);
 		var image = ROCK;
 		var info = rockInfo;
-		// new Rock = (x, y, vx, vy, angle, angleV, image, info);
 		var rock = new Rock(x, y, vx, vy, angle, angleV, ROCK, rockInfo, 'rock');
 		rocks.push(rock);
 	}
 };
-// handles object collision
-var onCollide = function(group, thing){
+
+var onCollide = function(group, thing){ // handles object collision
 	var collisions = 0;
 	for (var i = 0; i < group.length; i++){
 		if (group[i].collide(thing)){
@@ -344,15 +335,15 @@ var onCollide = function(group, thing){
 	} 
 	return collisions;
 };
-// handles group object collisions i.e lasers on rocks
-var groupsCollide = function(groupA, groupB) {
+
+var groupsCollide = function(groupA, groupB) { // handles group object collisions i.e lasers on rocks
 	for (var i = 0; i < groupA.length; i++){
 		var collisions = onCollide(groupB, groupA[i]);
 		SCORE += (collisions * 10);
 	}
 };
-// removes objects from screen once they collide
-var updateGroupOnCollide = function (group) {
+
+var updateGroupOnCollide = function (group) { // removes objects from screen once they collide
 	for (var i = 0; i < group.length; i++) {
 		if (group[i].update() === false) {
 			group.splice(i, 1);
@@ -360,13 +351,13 @@ var updateGroupOnCollide = function (group) {
 		}
 	}
 };
-// start and reset button functionalities
-var startGame = function(){
+
+var startGame = function(){ // start and reset button functionalities
 	STARTED = true;
 	return STARTED;
 };
-// resets the game by drawing the start to play screen again and resetting the game data
-var reset = function() {
+
+var reset = function() {	// resets the game by drawing the start to play screen again and resetting the game data
 	ctx.fillStyle = "rgba(0, 0, 0, 1)";
 	ctx.fillRect(0, 0, WIDTH, HEIGHT);
 	ctx.fillStyle = "rgb(250, 250, 250)";

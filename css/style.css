@@ -1,9 +1,9 @@
-/* load font style */
-body {
+/* @general */
+body { /* load font style */
     font-family: 'Press Start 2P', cursive, Fallback, sans-serif;
 }
-/* centers the canvas */ /* this is affecting how the buttons are rendering on screen */
-canvas {
+
+canvas { /* centers the canvas */
     padding: 0;
     margin: auto;
     display: block;
@@ -15,8 +15,8 @@ canvas {
     left: 0;
     right: 0;
 }
-/* on mobile */
-#on-mobile{
+/* @mobile */
+#on-mobile{ /* sets up apology div for mobile users to be displayed via media query */
     color: white;
     text-align: center;
     width: 800px;
@@ -25,8 +25,8 @@ canvas {
     margin: auto;
     position: absolute;
 }
-/* instructions */
-#instructions {
+/* @layout */
+#instructions { /* instructions */
     margin: auto;
     margin-right: 15px;
     display: block;
@@ -38,8 +38,15 @@ canvas {
     color:white;
     text-align: center;
 }
-/* button position */
-#button-div {
+#game-title {   /* centers h1 title text */
+    color: white;
+    position: absolute;
+    left: 50%;
+    margin-left: -200px;
+}
+
+/* @buttons, button style, button hover, button-div */
+#button-div {   /* button position */
     margin: auto;
     display: block;
     position: absolute;
@@ -48,8 +55,8 @@ canvas {
     left: 82%;
     top: 15%;
 }
-/* button style */
-#button{
+
+#button{    /* button style */
     font-family: 'Press Start 2P', cursive, Fallback, sans-serif;
     color: white;
     background-color: black;
@@ -58,19 +65,13 @@ canvas {
     border-style: none;
     cursor: pointer;
 }
-/* creates border on hover */
-#button:hover {
+
+#button:hover { /* creates border on hover */
     border: 1px solid;
     border-width: 5px;
     border-color: white;
 }
-/* centers h1 title text */
-#game-title {
-    color: white;
-    position: absolute;
-    left: 50%;
-    margin-left: -200px;
-}
+/* @mediaqueries */
 @media only screen and (max-device-width: 900px){
     #game-title{
         font-size: 15px;

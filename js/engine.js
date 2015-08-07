@@ -73,7 +73,6 @@ var Engine = (function(global) {
      * game loop.
      */
     function init() {
-        //reset();
         lastTime = Date.now();
         main();
     }
@@ -89,7 +88,6 @@ var Engine = (function(global) {
      */
     function update(dt) {
         updateEntities(dt);
-        // checkCollisions();
     }
 
     /* This is called by the update function  and loops through all of the
@@ -99,8 +97,7 @@ var Engine = (function(global) {
      * the data/properties related to  the object. Do your drawing in your
      * render methods.
      */
-    function updateEntities(dt) {
-        // updates all game objects
+    function updateEntities(dt) {// updates all game objects
         player.update();
         rocks.forEach(function(rock){
             rock.update(dt);
@@ -111,8 +108,8 @@ var Engine = (function(global) {
         texts.forEach(function(text) {
             text.update(dt);
         });
-        // controls life points
-        if (LIVES > 0){
+        
+        if (LIVES > 0){// lose lifepoints on collision event
             LIVES -= onCollide(rocks, player);
             groupsCollide(lasers, rocks);
         }
@@ -132,13 +129,16 @@ var Engine = (function(global) {
         ctx.drawImage(Resources.get(SPACEBG), 0, 0);
         ctx.drawImage(Resources.get(BGPLANET), 440, 375);
 
-        // time element paces the movement of the background
-        // moving background math ported from my python version of asteroids 
-        // http://www.codeskulptor.org/#user39_tlhzYVXuHl_17.py on line 299
-        time+=0.5; //increase the tick 
+        /* time element paces the movement of the background
+         * moving background math ported from my python version of asteroids 
+         * http://www.codeskulptor.org/#user39_tlhzYVXuHl_17.py on line 299 
+         */
+        time+=0.5; // increase the tick 
         time2+=0.5; // second timer for second round of debris because the image isn't large enough
-        // wtime and wtime2 are used to simulate a scrolling down effect as time and time2 tick on
-        // we modulo divide with twice the debris width to loop it so we have a changing dy 
+
+        /* wtime and wtime2 are used to simulate a scrolling down effect as time and time2 tick on
+         * we modulo divide with twice the debris width to loop it so we have a changing dy
+         */
         wtime = time % 900 ; 
         wtime2 = time2 % 960;
 
@@ -147,7 +147,6 @@ var Engine = (function(global) {
         ctx.drawImage(Resources.get(DEBRIS), 0, 0, 640, 480, 30, wtime - 380, 640, 480);
         ctx.drawImage(Resources.get(DEBRIS), 0, 0, 640, 480, 30, wtime2 - 400, 640, 480);
 
-        //drawImageRot(ROCK, 250, 250, 101, 84, 360);
         // Draw every gameobj like asteroids
         renderEntities();
     }
@@ -158,8 +157,7 @@ var Engine = (function(global) {
      * on your enemy and player entities within app.js
      */
     function renderEntities() {
-        if (STARTED){
-            // Renders Points on Screen
+        if (STARTED){// Renders Points on Screen, renders gameObjs on screen
             ctx.fillStyle = "rgb(250, 250, 250)";
             ctx.font = "20px 'Press Start 2P'";
             ctx.fillText('SCORE: ' + SCORE, 5, 590);
@@ -175,7 +173,7 @@ var Engine = (function(global) {
             texts.forEach(function(text) {
                 text.render();
             });
-            if (LIVES > 0){
+            if (LIVES > 0){ // renders the # of lives the player currently has
                 player.render();
                 var x = 730;
                 for (var i = 0; i < LIVES; i++){
@@ -183,12 +181,11 @@ var Engine = (function(global) {
                     x -= 70;
                 }
             }
-            if (LIVES === 0){
+            if (LIVES === 0){ //sets the GAMEOVER condition to be true
                 GAMEOVER = true;
             }
         }
-        // Renders Start Screen
-        if (!STARTED){
+        if (!STARTED){ // Renders Start Screen
             ctx.fillStyle = "rgba(0, 0, 0, 1)";
             ctx.fillRect(0, 0, WIDTH, HEIGHT);
             ctx.fillStyle = "rgb(250, 250, 250)";
@@ -196,8 +193,7 @@ var Engine = (function(global) {
             ctx.fillText('PRESS START TO PLAY', 250, 300);
 
         }
-        // Renders Game Over Screen
-        if (GAMEOVER){
+        if (GAMEOVER){// Renders Game Over Screen
             ctx.fillStyle = "rgba(0, 0, 0, 1)";
             ctx.fillRect(0, 0, WIDTH, HEIGHT);
             ctx.fillStyle = "rgb(250, 250, 250)";
@@ -206,14 +202,13 @@ var Engine = (function(global) {
             ctx.fillText('YOUR SCORE:' + SCORE, 250, 300);
         }
     }
-
     /* This function does nothing but it could have been a good place to
      * handle game reset states - maybe a new game menu or a game over screen
      * those sorts of things. It's only called once by the init() method.
      */
     function reset() {
+        null;
     }
-
     /* Go ahead and load all of the images we know we're going to need to
      * draw our game level. Then set init as the callback method, so that when
      * all of these images are properly loaded our game will start.
@@ -230,7 +225,6 @@ var Engine = (function(global) {
         'images/planetBG.png'
     ]);
     Resources.onReady(init);
-
     /* Assign the canvas' context object to the global variable (the window
      * object when run in a browser) so that developer's can use it more easily
      * from within their app.js files.
