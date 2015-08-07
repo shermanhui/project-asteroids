@@ -64,7 +64,7 @@ This project is licensed under the MIT License
 	- ~~Ship should be able to wrap around the screen~~
 
 ### Missiles
-- Implement missile functionality
+- ~~Implement missile functionality~~
 	- ~~Can have multiple missiles, we should have an array of these objects~~
 	- ~~Missiles should expire~~
 	- ~~Missiles should blow up asteroids~~
@@ -96,4 +96,6 @@ This project is licensed under the MIT License
 
 ###General
 - Add sound??
+- Cleaner code implementation
+- Better DOM manipulation 
 
