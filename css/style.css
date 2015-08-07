@@ -15,6 +15,16 @@ canvas {
     left: 0;
     right: 0;
 }
+/* on mobile */
+#on-mobile{
+    color: white;
+    text-align: center;
+    width: 800px;
+    height: 600px;
+    display: none;
+    margin: auto;
+    position: absolute;
+}
 /* instructions */
 #instructions {
     margin: auto;
@@ -59,4 +69,17 @@ canvas {
     position: absolute;
     left: 50%;
     margin-left: -200px;
-}​
+}
+@media only screen and (max-device-width: 900px){
+    #game-title{
+        font-size: 15px;
+    }
+    canvas, #button-div, #instructions {
+        display: none;
+    }
+    #on-mobile {
+        display:block;
+        width: 800px;
+        height: 600px;
+    }
+}
