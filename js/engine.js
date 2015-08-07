@@ -30,11 +30,11 @@ var Engine = (function(global) {
     document.body.style.backgroundColor = "black";
     canvas.width = 800;
     canvas.height = 600;
-    canvas.style.border = "1px solid";
+    canvas.style.border = "1px solid white";
     canvas.setAttribute('id', 'canvas');
     doc.body.appendChild(canvas);
-    doc.body.appendChild(startButton);
-    doc.body.appendChild(restartButton);
+    doc.getElementById('button-div').appendChild(startButton);
+    doc.getElementById('button-div').appendChild(restartButton);
 
 
     /* This function serves as the kickoff point for the game loop itself
@@ -191,8 +191,8 @@ var Engine = (function(global) {
             ctx.fillRect(0, 0, WIDTH, HEIGHT);
             ctx.fillStyle = "rgb(250, 250, 250)";
             ctx.font = "18px 'Press Start 2P'";
-            ctx.fillText('GAME OVER', 250, 300);
-            ctx.fillText('YOUR SCORE:' + SCORE, 250, 350);
+            ctx.fillText('GAME OVER :(', 250, 250);
+            ctx.fillText('YOUR SCORE:' + SCORE, 250, 300);
         }
     }
 
@@ -201,14 +201,6 @@ var Engine = (function(global) {
      * those sorts of things. It's only called once by the init() method.
      */
     function reset() {
-        // ctx.fillStyle = "rgba(0, 0, 0, 1)";
-        // ctx.fillRect(0, 0, WIDTH, HEIGHT);
-        // ctx.fillStyle = "rgb(250, 250, 250)";
-        // ctx.font = "18px 'Press Start 2P'";
-        // ctx.fillText('PRESS START TO PLAY', 250, 300);
-        // SCORE = 0;
-        // LIVES = 3;
-        // STARTED = false;
     }
 
     /* Go ahead and load all of the images we know we're going to need to

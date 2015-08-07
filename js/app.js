@@ -387,6 +387,7 @@ addEventListener("keyup", function (e) {
 
 // Start and Reset Buttons
 var startButton = document.createElement('input');
+startButton.setAttribute('id', 'button');
 startButton.setAttribute('type', 'button');
 startButton.setAttribute('name', 'start');
 startButton.setAttribute('value', 'Start Game');
@@ -394,6 +395,7 @@ startButton.setAttribute('onClick', 'startGame()');
 
 
 var restartButton = document.createElement('input');
+restartButton.setAttribute('id', 'button');
 restartButton.setAttribute('type', 'button');
 restartButton.setAttribute('type', 'button');
 restartButton.setAttribute('name', 'restart');

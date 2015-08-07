@@ -16,6 +16,32 @@ canvas {
     left: 0;
     right: 0;
 }
+
+#button-div {
+    margin: auto;
+    display: block;
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    top: 15%;
+    right: 82%;
+}
+
+#button{
+    font-family: 'Press Start 2P', cursive, Fallback, sans-serif;
+    color: white;
+    background-color: black;
+    border-radius: 10px, 10px, 10px, 10px;
+    border-width: 0 0 3px;
+    border-style: none;
+    cursor: pointer;
+}
+
+#button:hover {
+    border: 1px solid;
+    border-width: 5px;
+    border-color: white;
+}
 /* centers h1 title text */
 #game-title {
     color: white;
