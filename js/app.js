@@ -31,7 +31,7 @@ var SLASER = 'images/shot.png'; // lasers
 var slaserInfo = new ImageInfo(5, 5, 10, 10, 20, 60);
 //                             cx, cy, w, h, r, lifespan;
 
-var ROCK = 'images/rock1.png';
+var ROCK = ['images/rock1.png', 'images/rock2.png'];
 var rockInfo = new ImageInfo(50.5, 42, 101, 84, 30); //6
 //                            cx, cy, w,    h, radius
 
@@ -179,7 +179,7 @@ Player.prototype.collide = function(otherObj){
 // Rock class
 var Rock = function(x, y, vx, vy, angle, angleV, image, info){
 	gameObj.call(this);
-	this.sprite = ROCK;
+	this.sprite = ROCK[Math.floor(Math.random() * 2)];
 	this.x = x;
 	this.y = y;
 	this.angle = angle;
@@ -192,6 +192,7 @@ var Rock = function(x, y, vx, vy, angle, angleV, image, info){
 Rock.prototype = Object.create(gameObj.prototype);
 Rock.prototype.constructor = Rock;
 Rock.prototype.render = function (x, y, vx, vy, angle, angleV, image, info) {
+	var ROCK = this.sprite;
 	ctx.save();
 	ctx.translate(this.x, this.y);
 	ctx.rotate(this.angle * TO_RADIANS);

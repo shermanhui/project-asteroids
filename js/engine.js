@@ -213,10 +213,9 @@ var Engine = (function(global) {
         'images/redship.png',
         'images/miniship.png',
         'images/rock1.png',
+        'images/rock2.png',
         'images/debris.png',
         'images/shot.png',
-        'images/slaser.png',
-        'images/bullet.png',
         'images/planetBG.png'
     ]);
     Resources.onReady(init);
