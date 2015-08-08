@@ -142,8 +142,8 @@ Player.prototype.update = function(dt){
 	if (this.thrust) {
 		var angle = this.angle * TO_RADIANS;
 		var accel = angleToVector(angle);
-		this.velocity[0] += accel[0] / 10;
-		this.velocity[1] += accel[1] / 10;
+		this.velocity[0] += accel[0] / 5;
+		this.velocity[1] += accel[1] / 5;
 	}
 
 	// friction needed to help control ship! this eventually wittles down the velocity
@@ -154,11 +154,11 @@ Player.prototype.update = function(dt){
 Player.prototype.shoot = function(){ 	// ship shoots lasers based off of the ships details
 	var vangle = this.angle * TO_RADIANS;
 	var forwardDir = angleToVector(vangle);
-	var laserX = this.x + this.radius * forwardDir[0];
-	var laserY = this.y + this.radius * forwardDir[1];
+	var laserX = this.x + (this.radius + 10) * forwardDir[0];
+	var laserY = this.y + (this.radius + 10) * forwardDir[1];
 	var laserXVel = this.velocity[0] + 5 * forwardDir[0];
 	var laserYVel = this.velocity[1] + 5 * forwardDir[1];
-	var laser = new Laser(laserX, laserY, laserXVel, laserYVel, this.angle, 0, SLASER, slaserInfo, 'laser');
+	var laser = new Laser(laserX, laserY, laserXVel, laserYVel, vangle, 0, SLASER, slaserInfo, 'laser');
 	lasers.push(laser);
 };
 
@@ -189,8 +189,8 @@ Rock.prototype.render = function (x, y, vx, vy, angle, angleV, image, info) {
 	ctx.restore();
 };
 Rock.prototype.update = function(dt){	// changes rock position and makes sure they wrap around the screen
-	this.x += (this.velocity[0] /2);
-	this.y += (this.velocity[1] /2);
+	this.x += (this.velocity[0] /3);
+	this.y += (this.velocity[1] /3);
 	this.angle += this.angleV;
 	if (this.x >= RIGHT){ // Handles screen wrapping for the rocks
 		this.x = LEFT;
