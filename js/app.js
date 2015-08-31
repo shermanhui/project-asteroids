@@ -1,6 +1,6 @@
 // global variables
 var SCORE = 0;
-var LIVES = 5; 
+var LIVES = 5;
 var STARTED = false;
 var GAMEOVER = false;
 
@@ -17,7 +17,7 @@ var SPACEBG = 'images/space-oj.jpg';
 var spaceInfo = new ImageInfo(400, 300, 800, 600);
 
 var SHIP = 'images/redship.png';
-var MINISHIP = 'images/miniship.png'; //ships for lifebar no shipInfo needed for this
+var MINISHIP = 'images/miniship.png'; //load smaller ship images for life points, don't need ImageInfo
 var shipInfo = new ImageInfo(37.5, 49.5, 75, 99, 40);
 //                            cx, cy,    w,  h, r;
 var SLASER = 'images/shot.png'; // lasers
@@ -25,13 +25,13 @@ var slaserInfo = new ImageInfo(5, 5, 10, 10, 20, 60);
 //                             cx, cy, w, h, r, lifespan;
 
 var ROCK = ['images/rock1.png', 'images/rock2.png'];
-var rockInfo = new ImageInfo(50.5, 42, 101, 84, 20); 
+var rockInfo = new ImageInfo(50.5, 42, 101, 84, 20);
 //                            cx, cy, w,    h, radius
 
 var DEBRIS = 'images/debris.png'; // background debris
 var BGPLANET = 'images/planetBG.png'; //background planet image
 
-// Math functions 
+// Math functions
 
 var angleToVector = function(angle){	// Converts angle to vector to be used for velocity
 	return [Math.cos(angle), Math.sin(angle)];
@@ -66,7 +66,7 @@ var gameObj = function(x, y, vx, vy, angle, angleV, image, info){	// gameobject 
 gameObj.prototype.collide = function(otherObj){ // Player.collide falls through to here, handles collision detection for the ship and rocks
 	var distance = distToObj(this.x, this.y, otherObj.x, otherObj.y);
 	if (distToObj < (this.radius + otherObj.radius)){
-		return true;
+		return true; // if there is a collision; onCollide kicks in to determine if you earn points or lose a life
 	} else {
 		return false;
 	}
@@ -138,12 +138,12 @@ Player.prototype.update = function(dt){
 	/* update velocity
 	 * velocity update is acceleration in direction of forward vector which is given by angleToVector
 	 * we update the forward vector on thrust.
-	 */ 
+	 */
 	if (this.thrust) {
 		var angle = this.angle * TO_RADIANS;
 		var accel = angleToVector(angle);
-		this.velocity[0] += accel[0] / 5;
-		this.velocity[1] += accel[1] / 5;
+		this.velocity[0] += accel[0] / 10;
+		this.velocity[1] += accel[1] / 10;
 	}
 
 	// friction needed to help control ship! this eventually wittles down the velocity
@@ -154,12 +154,12 @@ Player.prototype.update = function(dt){
 Player.prototype.shoot = function(){ 	// ship shoots lasers based off of the ships details
 	var vangle = this.angle * TO_RADIANS;
 	var forwardDir = angleToVector(vangle);
-	var laserX = this.x + (this.radius + 10) * forwardDir[0];
-	var laserY = this.y + (this.radius + 10) * forwardDir[1];
+	var laserX = this.x + (this.radius) * forwardDir[0];
+	var laserY = this.y + (this.radius) * forwardDir[1];
 	var laserXVel = this.velocity[0] + 5 * forwardDir[0];
 	var laserYVel = this.velocity[1] + 5 * forwardDir[1];
-	var laser = new Laser(laserX, laserY, laserXVel, laserYVel, vangle, 0, SLASER, slaserInfo, 'laser');
-	lasers.push(laser);
+	var laser = new Laser(laserX, laserY, laserXVel, laserYVel, vangle, 0, SLASER, slaserInfo, 'laser'); // make the new laser
+	lasers.push(laser); // push the laser into an array of lasers to be used for collision detection
 };
 
 // make new Player at default x, y position that's in Player
@@ -167,7 +167,7 @@ var player = new Player(0, 0, 0, 0, SHIP, shipInfo, 'ship');
 
 var Rock = function(x, y, vx, vy, angle, angleV, image, info, identity){	// Rock class
 	gameObj.call(this);
-	this.sprite = ROCK[Math.floor(Math.random() * 2)];
+	this.sprite = ROCK[Math.floor(Math.random() * 2)]; // picks one of two rock sprites
 	this.x = x;
 	this.y = y;
 	this.angle = angle;
@@ -204,7 +204,7 @@ Rock.prototype.update = function(dt){	// changes rock position and makes sure th
 	}
 };
 
-Rock.prototype.collide = function(otherObj){	// collision detection
+Rock.prototype.collide = function(otherObj){	// collision detection for the Rocks, takes ships and lasers
 	var distance = distToObj(this.x, this.y, otherObj.x, otherObj.y);
 	if (distance < (this.radius + otherObj.radius)){
 		return true;
@@ -242,7 +242,7 @@ Laser.prototype.update = function(){
 	this.age += 1;
 
     if (this.y <= 0) {
-		this.y = HEIGHT; // reset to top of screen 
+		this.y = HEIGHT; // reset to top of screen
 	} else {
 		this.y = this.y % HEIGHT; // y wrap around screen
 	}
@@ -268,7 +268,7 @@ Laser.prototype.collide = function(otherObj){ 	// checks if laser hits rocks
 	}
 };
 
-var pointText = function(text, x, y){	// Render Text on Rock Kill
+var pointText = function(text, x, y){	// Text class, which is spawned onCollide
 	this.text = text;
 	this.x = x;
 	this.y = y;
@@ -281,7 +281,7 @@ pointText.prototype.render = function(){
 	ctx.restore();
 };
 pointText.prototype.update = function(){
-	this.age += 1;
+	this.age += 1; // adds one age for every tick and expires at the lifespand of text
 	if (this.age >= this.lifespan){
 		return false;
 	} else {
@@ -318,28 +318,28 @@ var rockMaker = function(){ // make individual rocks to be pushed to rocks array
 	}
 };
 
-var onCollide = function(group, thing){ // handles object collision
+var onCollide = function(group, thing){ // handles object collision, takes a group of objects and sees which one hit a thing
 	var collisions = 0;
 	for (var i = 0; i < group.length; i++){
-		if (group[i].collide(thing)){
+		if (group[i].collide(thing)){ // if there is a collision between objects
 			if (group[i].identity == "rock" && thing.identity == "ship"){
-				texts.push(new pointText('-1 LIFE', group[i].x, group[i].y));
+				texts.push(new pointText('-1 LIFE', group[i].x, group[i].y)); // draws text at that collision position if a rock hits the ship
 			} else {
-				texts.push(new pointText('+10 pts', group[i].x, group[i].y));
+				texts.push(new pointText('+10 pts', group[i].x, group[i].y)); // draws text at the point where a laser hits a rock
 			}
-			collisions += 1;
-			group.splice(i, 1);
-			thing.lifespan = 0;
-			i--;
+			collisions += 1; // adds one to collisions
+			group.splice(i, 1); // removes the laser/rock that was involved in the above
+			thing.lifespan = 0; // deletes the thing that was hit
+			i--; // shrink the group size by 1 because we've removed something
 		}
-	} 
-	return collisions;
+	}
+	return collisions; // returns collision so groupsCollide can calculate the score
 };
 
 var groupsCollide = function(groupA, groupB) { // handles group object collisions i.e lasers on rocks
 	for (var i = 0; i < groupA.length; i++){
 		var collisions = onCollide(groupB, groupA[i]);
-		SCORE += (collisions * 10);
+		SCORE += (collisions * 10); // Score goes up by # of collisions x 10
 	}
 };
 

@@ -108,10 +108,10 @@ var Engine = (function(global) {
         texts.forEach(function(text) {
             text.update(dt);
         });
-        
+
         if (LIVES > 0){// lose lifepoints on collision event
-            LIVES -= onCollide(rocks, player);
-            groupsCollide(lasers, rocks);
+            LIVES -= onCollide(rocks, player); // updates Lives on collision with rocks and ship
+            groupsCollide(lasers, rocks); // checks for collisions between lasers and rocks
         }
         // updates game screen to reflect objects that need to be removed
         updateGroupOnCollide(lasers);
@@ -130,16 +130,16 @@ var Engine = (function(global) {
         ctx.drawImage(Resources.get(BGPLANET), 440, 375);
 
         /* time element paces the movement of the background
-         * moving background math ported from my python version of asteroids 
-         * http://www.codeskulptor.org/#user39_tlhzYVXuHl_17.py on line 299 
+         * moving background math ported from my python version of asteroids
+         * http://www.codeskulptor.org/#user39_tlhzYVXuHl_17.py on line 299
          */
-        time+=0.5; // increase the tick 
+        time+=0.5; // increase the tick
         time2+=0.5; // second timer for second round of debris because the image isn't large enough
 
         /* wtime and wtime2 are used to simulate a scrolling down effect as time and time2 tick on
          * we modulo divide with twice the debris width to loop it so we have a changing dy
          */
-        wtime = time % 900 ; 
+        wtime = time % 900 ;
         wtime2 = time2 % 960;
 
         // drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight)
@@ -207,7 +207,6 @@ var Engine = (function(global) {
      * those sorts of things. It's only called once by the init() method.
      */
     function reset() {
-        null;
     }
     /* Go ahead and load all of the images we know we're going to need to
      * draw our game level. Then set init as the callback method, so that when
