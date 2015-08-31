@@ -5,6 +5,8 @@ HTML5 clone of classic arcade game Asteroids using game engines courtesy of Udac
 
 To play the game download the zip file or clone my [repo](github.com/shui91/project-asteroids) and initialize the project at index.html.
 
+Alternatively there is an online demo [here][http://shui91.github.io/project-asteroids/index.html]
+
 ## How To Play
 Click on Start to begin the game. 
 Click on Restart to end the current session and return to the Start Screen.
@@ -95,6 +97,7 @@ This project is licensed under the MIT License
 
 ###Score and Life system
 - ~~Keep track of score based on number of asteroids destroyed~~
+- ~~ Scores and Lives show up on object collision ~~
 - ~~When lives < 0; game-over~~
 
 ###General
