@@ -1,6 +1,5 @@
 # project-asteroids
-HTML5 clone of classic arcade game Asteroids using game engines courtesy of Udacity
-This version was inspired by "Rice Rocks" a Python version of Asteroids.
+HTML5 clone of classic arcade game Asteroids using game engines courtesy of Udacity. This version was inspired by "Rice Rocks" a Python version of Asteroids.
 
 ## Initialization
 
@@ -30,6 +29,8 @@ Thank you to Udacity for providing engine.js and resource.js.
 The original source code can be found at [frontend-nanodegree-arcade-game](github.com/udacity/frontend-nanodegree-arcade-game)
 
 Art work provided by Kenney.nl for his [SpaceShooterRedux](http://opengameart.org/content/space-shooter-redux) artpack
+
+Laser art courtesy of Kim Lathrop.
 
 [Foundation HTML5 Animation with JavaScript](https://books.google.ca/books?id=RmphScK8u-gC&printsec=frontcover#v=onepage&q&f=false) was referenced for several animation solutions
 
