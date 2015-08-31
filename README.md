@@ -5,7 +5,7 @@ HTML5 clone of classic arcade game Asteroids using game engines courtesy of Udac
 
 To play the game download the zip file or clone my [repo](github.com/shui91/project-asteroids) and initialize the project at index.html.
 
-Alternatively there is an online demo [here][http://shui91.github.io/project-asteroids/index.html]
+Alternatively there is an online demo [here](http://shui91.github.io/project-asteroids/index.html)
 
 ## How To Play
 Click on Start to begin the game. 
